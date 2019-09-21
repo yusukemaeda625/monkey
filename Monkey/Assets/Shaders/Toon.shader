@@ -8,28 +8,6 @@
   SubShader {
     
     Pass {
-      Cull Front
-
-      CGPROGRAM
-      #pragma vertex vert
-      #pragma fragment frag
-          
-      uniform fixed4 _OutlineColor;
-      uniform half   _OutlineWidth;
-           
-      float4 vert(float4 vertex : POSITION, float3 normal : NORMAL) : SV_POSITION {
-        vertex.xyz += normal * _OutlineWidth;
-        return UnityObjectToClipPos(vertex);
-      }
-      
-      
-      fixed4 frag() : SV_Target {
-        return _OutlineColor;
-      }
-      ENDCG
-    }
-        
-    Pass {
       Tags { "LightMode" = "ForwardBase" }
 
       CGPROGRAM
