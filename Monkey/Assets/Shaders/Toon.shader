@@ -2,7 +2,12 @@
   Properties {
     _MainTex ("MainTex", 2D) = "white"{}
     _Color ("Color", Color) = (1,1,1,1)
+    _DarkParam ("DarkAreaParam",Range(0,1)) = 0.8
+    _MiddleParam ("MiddleAreaParam",Range(0,1)) = 0.3
+    _MiddleColorParam ("MiddleColorParam", Range(0.0,1.0)) = 0.7
+    _MiddleColor ("MiddleShadowColor", Color) = (1,1,1,1)
     _DarkColorParam ("DarkColorParam", Range(0.0,1.0)) = 0.5         
+    _DarkColor ("DarkShadowColor", Color) = (1,1,1,1)
   }
   SubShader {
     
@@ -15,10 +20,16 @@
                         
       uniform sampler2D _MainTex;
       uniform float4 _MainTex_ST;
+      uniform float _MiddleColorParam;
       uniform float _DarkColorParam;
       uniform fixed4    _LightColor0;      
       uniform sampler2D _LightTexture0;
       uniform sampler2D _LightTextureB0;
+      uniform float _DarkParam;
+      uniform float _MiddleParam;
+      uniform float4 _DarkColor;
+      uniform float4 _MiddleColor;
+      uniform float _White;
       uniform float4 _Color;
       uniform float4x4  unity_WorldToLight;
             
@@ -51,13 +62,22 @@
 
 
         half NdotL = saturate(dot(normal, lightDir));
-        
+                
         fixed4 mainTex = tex2D(_MainTex, i.uv * _MainTex_ST.xy + _MainTex_ST.zw);         
+        
         mainTex *= _Color;
 
-        fixed3 toon = lerp(mainTex.rgb, mainTex.rgb * _DarkColorParam, step(NdotL, 0));
-        
+        fixed3 toon = lerp(mainTex.rgb, mainTex.rgb * _DarkColorParam, step(NdotL, 0));                
 
+        if(NdotL <= _DarkParam){
+          toon = mainTex.rgb * _DarkColorParam * _DarkColor.rgb;
+        }else if(NdotL <= _MiddleParam){
+          toon = mainTex.rgb * _MiddleColorParam * _MiddleColor.rgb;
+        }else{
+          toon = mainTex.rgb;
+        }
+
+              
         fixed4 color = fixed4(toon, 1.0);
         
         return color;
