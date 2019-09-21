@@ -56,8 +56,4 @@ sysinfo.txt
 *.unitypackage
 
 # Crashlytics generated file
-<<<<<<< HEAD
 crashlytics-build.properties
-=======
-crashlytics-build.properties
->>>>>>> parent of 0d87bad... キャッシュ削除
