@@ -7,6 +7,7 @@ public class Fade : MonoBehaviour
 {
     [SerializeField] GameObject panel;   
     private Image fadeImage;
+    public Color fadeColor;
     public bool isFadeIn = false;
     public bool isFadeOut = false;
     public float speed = 1;
@@ -15,6 +16,7 @@ public class Fade : MonoBehaviour
     void Start()
     {
         fadeImage = panel.GetComponent<Image>();
+        fadeColor = new Color(0,0,0,1);
     }
     
     void Update()
@@ -24,7 +26,7 @@ public class Fade : MonoBehaviour
             if(alpha <= 0.0f){
                 isFadeIn = false;
             }
-            fadeImage.color = new Color (0,0,0,alpha);
+            fadeImage.color = new Color (fadeColor.r,fadeColor.g,fadeColor.b,alpha);
         }
 
         if(isFadeOut){
@@ -32,7 +34,7 @@ public class Fade : MonoBehaviour
             if(alpha >= 1.0){
                 isFadeOut = false;
             }
-            fadeImage.color = new Color (0,0,0,alpha);
+            fadeImage.color = new Color (fadeColor.r,fadeColor.g,fadeColor.b,alpha);
         }
     }
 
