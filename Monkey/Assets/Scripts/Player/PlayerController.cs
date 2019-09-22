@@ -100,14 +100,14 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetButtonDown("D-Right")&& !isGuardStop)
         {
-            targetPosition = tempPosition - movementVelocity;
+            targetPosition = tempPosition + movementVelocity;
             StartCoroutine(DashEffectController());
             animator.SetTrigger(dash);
         }
 
         if (Input.GetButtonDown("D-Left") && !isGuardStop)
         {
-            targetPosition = tempPosition + movementVelocity;
+            targetPosition = tempPosition - movementVelocity;
             animator.SetTrigger(backStep);
         }
 
