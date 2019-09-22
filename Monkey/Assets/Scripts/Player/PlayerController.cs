@@ -10,8 +10,11 @@ public class PlayerController : MonoBehaviour
     private bool isGuarding = false;
     private bool isJustGuard = false;
     private bool hit = false;
+    private bool isGuardStop = false;
     private int justGuardDuration = 10;
+    private int guardStopDuration = 10;
     private int timer = 0;
+    private int stopTimer = 0;
     private float movementVelocity = 2;
     private float duration = 0.3f;
     private float targetPosition;
@@ -29,10 +32,12 @@ public class PlayerController : MonoBehaviour
                 hit = true;
                 if (isJustGuard)
                 {
+                    StartCoroutine(JustGuardOnHit());
                     Debug.Log("Just Guard");
                 }
                 if (isGuarding)
                 {
+                    StartCoroutine(GuardOnHit());
                     Debug.Log("Guard");
                 }
 
@@ -56,7 +61,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool(guard, true);
         }
 
-        if (Input.GetButtonUp("Guard"))
+        if (Input.GetButtonUp("Guard") && !isGuardStop)
         {
             StartCoroutine(JustGuard());
         }
@@ -81,19 +86,34 @@ public class PlayerController : MonoBehaviour
         isJustGuard = true;
         for (timer = 0; timer < justGuardDuration; timer++)
         {
-            if (hit)
-            {
-                yield return null;
-                animator.SetBool(guard, false);
-                isJustGuard = false;
-                isGuarding = false;
-                yield break;
-            }
             yield return null;
         }
 
         animator.SetBool(guard, false);
         isJustGuard = false;
         isGuarding = false;
+    }
+
+    IEnumerator JustGuardOnHit()
+    {
+        animator.SetBool(guard, false);
+        isJustGuard = false;
+        isGuarding = false;
+        yield break;
+    }
+
+    IEnumerator GuardOnHit()
+    {
+        isGuarding = true;
+        isGuardStop = true;
+        for (stopTimer = 0; stopTimer < guardStopDuration; stopTimer++)
+        {
+            isJustGuard = false;
+            yield return null;
+        }
+
+        animator.SetBool(guard, false);
+        isGuarding = false;
+        isGuardStop = false;
     }
 }
