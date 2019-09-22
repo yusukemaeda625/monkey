@@ -19,9 +19,6 @@ public class BarCon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.DownArrow)){
-            remainingTime -= 5f;
-        }
         var time = this.GetComponent<MyGameTimer>().totalTime;        
         remainingTime -= Time.deltaTime;
         scaleParam = remainingTime / limitTime;         
@@ -32,5 +29,9 @@ public class BarCon : MonoBehaviour
         }else{
             TimeText.GetComponent<Text>().text = "0.00";
         }
+    }
+
+    public void ShortenLifeTime(float time){
+        remainingTime -= time;
     }
 }
