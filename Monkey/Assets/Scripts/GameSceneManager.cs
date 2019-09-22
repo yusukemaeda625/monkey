@@ -14,7 +14,7 @@ public class GameSceneManager : MonoBehaviour
     {
         var canvas = GameObject.Find("FadeCanvas");
         canvas.GetComponent<Fade>().FadeIn();             
-        defaultSkyBoxMaterial = RenderSettings.skybox;
+        //defaultSkyBoxMaterial = RenderSettings.skybox;
         blackMat = new Material(Shader.Find("Unlit/black"));
     }
     
@@ -96,7 +96,7 @@ public class GameSceneManager : MonoBehaviour
         foreach(var mat in changedMaterials){
             mat.shader = dictionaryMaterialShader[mat];
         }
-        RenderSettings.skybox = defaultSkyBoxMaterial;
+        //RenderSettings.skybox = defaultSkyBoxMaterial;
         changedMaterials.Clear();
         dictionaryMaterialShader.Clear();
     }

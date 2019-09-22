@@ -9,6 +9,7 @@ TagManager:
   - Bullet
   - Effect
   - RifleBullet
+  - Enemy
   layers:
   - Default
   - TransparentFX
