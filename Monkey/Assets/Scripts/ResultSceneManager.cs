@@ -11,7 +11,8 @@ public class ResultSceneManager : MonoBehaviour
     {
         var canvas = GameObject.Find("FadeCanvas");                                 
         var fadeScript = canvas.GetComponent<Fade>();
-        fadeScript.fadeColor = new Color(0f,0f,0f,0f);
+        fadeScript.fadeColor = new Color(0f,0f,0f,1f);
+        fadeScript.FadeIn();
         Invoke("ActiveResultCanvas",1);
     }
 
@@ -22,9 +23,10 @@ public class ResultSceneManager : MonoBehaviour
 
     void ActiveResultCanvas(){
         var rc = GameObject.Find("ResultCanvas");               
-        rc.GetComponent<Canvas>().enabled = true;
         var timetext = GameObject.Find("TimeText");               
         timetext.GetComponent<Text>().text = PlayerPrefs.GetInt("PlayerMin").ToString("00") + ":" + PlayerPrefs.GetFloat("PlayerSec").ToString("F2");
+        rc.GetComponent<Canvas>().enabled = true;
+        
     } 
 
     public void ToTitle(){
@@ -35,6 +37,7 @@ public class ResultSceneManager : MonoBehaviour
         Invoke("SceneTransition",1);
     }  
     void SceneTransition(){
+        
         SceneManager.LoadScene("Title");
     } 
 }

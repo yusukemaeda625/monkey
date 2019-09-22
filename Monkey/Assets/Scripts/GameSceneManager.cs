@@ -36,7 +36,7 @@ public class GameSceneManager : MonoBehaviour
 
         var canvas = GameObject.Find("FadeCanvas");
         var fadeScript = canvas.GetComponent<Fade>();
-        fadeScript.fadeColor = new Color(0.5f,0.5f,0.5f,1.0f);
+        fadeScript.fadeColor = new Color(0f,0f,0f,1.0f);
         fadeScript.FadeOut();        
         Invoke("ToResultScene",canvas.GetComponent<Fade>().speed);
     }
