@@ -15,7 +15,6 @@ public class GameSceneManager : MonoBehaviour
     
     void Update()
     {
-
         if (Input.GetKey(KeyCode.Space)) {            
             GameClear();
         }
