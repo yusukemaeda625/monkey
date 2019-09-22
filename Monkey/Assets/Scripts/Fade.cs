@@ -16,7 +16,7 @@ public class Fade : MonoBehaviour
     void Start()
     {
         fadeImage = panel.GetComponent<Image>();
-        fadeColor = new Color(0,0,0,1);
+        fadeColor = new Color(0,0,0,0);
     }
     
     void Update()
@@ -25,17 +25,16 @@ public class Fade : MonoBehaviour
             alpha -= speed * Time.deltaTime;
             if(alpha <= 0.0f){
                 isFadeIn = false;
-            }
-            fadeImage.color = new Color (fadeColor.r,fadeColor.g,fadeColor.b,alpha);
+            }            
         }
 
         if(isFadeOut){
             alpha += speed * Time.deltaTime;
             if(alpha >= 1.0){
                 isFadeOut = false;
-            }
-            fadeImage.color = new Color (fadeColor.r,fadeColor.g,fadeColor.b,alpha);
+            }            
         }
+        fadeImage.color = new Color (fadeColor.r,fadeColor.g,fadeColor.b,alpha);
     }
 
     public void FadeOut(){

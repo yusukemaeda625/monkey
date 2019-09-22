@@ -138,7 +138,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &662699649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -234,7 +234,7 @@ PrefabInstance:
     - target: {fileID: 1949446739684240211, guid: bd49b5d8d25364499a5596b4cbe1ae12,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1949446739684240222, guid: bd49b5d8d25364499a5596b4cbe1ae12,
         type: 3}
@@ -344,7 +344,7 @@ PrefabInstance:
     - target: {fileID: 1949446739684240223, guid: bd49b5d8d25364499a5596b4cbe1ae12,
         type: 3}
       propertyPath: m_SortingOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1949446739684240223, guid: bd49b5d8d25364499a5596b4cbe1ae12,
         type: 3}
@@ -354,27 +354,32 @@ PrefabInstance:
     - target: {fileID: 1949446739684240210, guid: bd49b5d8d25364499a5596b4cbe1ae12,
         type: 3}
       propertyPath: fadeColor.a
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1949446739684240210, guid: bd49b5d8d25364499a5596b4cbe1ae12,
         type: 3}
       propertyPath: fadeColor.r
-      value: 0.745283
+      value: 0.6509434
       objectReference: {fileID: 0}
     - target: {fileID: 1949446739684240210, guid: bd49b5d8d25364499a5596b4cbe1ae12,
         type: 3}
       propertyPath: fadeColor.g
-      value: 0.745283
+      value: 0.6509434
       objectReference: {fileID: 0}
     - target: {fileID: 1949446739684240210, guid: bd49b5d8d25364499a5596b4cbe1ae12,
         type: 3}
       propertyPath: fadeColor.b
-      value: 0.745283
+      value: 0.6509434
       objectReference: {fileID: 0}
     - target: {fileID: 1949446740384374089, guid: bd49b5d8d25364499a5596b4cbe1ae12,
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1949446740384374089, guid: bd49b5d8d25364499a5596b4cbe1ae12,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd49b5d8d25364499a5596b4cbe1ae12, type: 3}
