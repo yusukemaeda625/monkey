@@ -7,31 +7,53 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    #region EffectVariables
+    
     [SerializeField] private GameObject effectPosition = null;
     [SerializeField] private GameObject guardEffectPosition = null;
     [SerializeField] private Sprite[] dashEffectSprites = null;
     [SerializeField] private Sprite[] guardEffectSprites = null;
     [SerializeField] private Sprite[] justGuardEffectSprites = null;
     [SerializeField] private Sprite clearImage = null;
+    private Image effect = null;
+    
+    #endregion
+
+    #region PlayerMovementVariables
+    
     private bool isGuarding = false;
     private bool isJustGuard = false;
     private bool hit = false;
     private bool isGuardStop = false;
     private int justGuardDuration = 8;
-    private int guardStopDuration = 30;
+    private int guardStopDuration = 20;
     private int timer = 0;
     private int stopTimer = 0;
     private float movementVelocity = 2;
     private float duration = 0.3f;
     private float targetPosition;
+    
+    #endregion
+
+    #region AnimationVariables
+
+    [SerializeField] private AnimationClip dashAnim = null;
+    [SerializeField] private AnimationClip backStepAnim = null;
+    [SerializeField] private AnimationClip guardAnim = null;
+    [SerializeField] private AnimationClip idleAnim = null;
     private Animator animator = null;
-    private Image effect = null;
+    private Animation animation = null;
     private int dash = Animator.StringToHash("dashTrigger");
+    private int backStep = Animator.StringToHash("backStepTrigger");
     private int guard = Animator.StringToHash("guard");
+    
+    #endregion
+
 
     void Start()
     {
         animator = GetComponent<Animator>();
+        animation = GetComponent<Animation>();
         effect = GameObject.FindGameObjectWithTag("Effect").GetComponent<Image>();
 
         this.OnTriggerEnterAsObservable()
@@ -86,6 +108,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("D-Left") && !isGuardStop)
         {
             targetPosition = tempPosition + movementVelocity;
+            animator.SetTrigger(backStep);
         }
 
         tempVec.x = Mathf.Lerp(tempPosition, targetPosition, duration);

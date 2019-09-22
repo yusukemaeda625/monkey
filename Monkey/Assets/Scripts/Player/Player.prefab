@@ -1693,6 +1693,7 @@ GameObject:
   - component: {fileID: 3313102647542748551}
   - component: {fileID: 3313102647542748548}
   - component: {fileID: 3313102647542748549}
+  - component: {fileID: 2733564660169693097}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1798,6 +1799,28 @@ MonoBehaviour:
   - {fileID: 21300000, guid: e7f1168c5626443b0ab608ff0cd5df9e, type: 3}
   - {fileID: 21300000, guid: 043be5921280c4a3e89d869d42a762ba, type: 3}
   clearImage: {fileID: 21300000, guid: 7e3f43ac2aed84c328092fa81b5c6cb0, type: 3}
+  dashAnim: {fileID: 7400000, guid: 7d11a3e503cf148d88af83abf3151fe8, type: 2}
+  backStepAnim: {fileID: 7400000, guid: 78b2a1b3e13ba4a979838f54928f1967, type: 2}
+  guardAnim: {fileID: 7400000, guid: f6377a783ccca446daf47479a2c4a004, type: 2}
+  idleAnim: {fileID: 7400000, guid: f2aaf9cb553b848e1aad37b1fec446f4, type: 2}
+--- !u!111 &2733564660169693097
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6835175999798135944}
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: f2aaf9cb553b848e1aad37b1fec446f4, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: f6377a783ccca446daf47479a2c4a004, type: 2}
+  - {fileID: 7400000, guid: 7d11a3e503cf148d88af83abf3151fe8, type: 2}
+  - {fileID: 7400000, guid: 78b2a1b3e13ba4a979838f54928f1967, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &6878949553254742510
 GameObject:
   m_ObjectHideFlags: 0
