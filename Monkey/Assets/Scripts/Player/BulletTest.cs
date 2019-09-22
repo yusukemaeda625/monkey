@@ -13,6 +13,6 @@ public class BulletTest : MonoBehaviour
 
     private void Update()
     {
-        transform.Translate(0.2f, 0, 0);
+        transform.Translate(-0.2f, 0, 0);
     }
 }
