@@ -13,6 +13,8 @@ public class ResultSceneManager : MonoBehaviour
         var fadeScript = canvas.GetComponent<Fade>();
         fadeScript.fadeColor = new Color(0f,0f,0f,1f);
         fadeScript.FadeIn();
+        var timetext = GameObject.Find("TimeText");               
+        timetext.GetComponent<Text>().text = PlayerPrefs.GetInt("PlayerMin").ToString("00") + ":" + PlayerPrefs.GetFloat("PlayerSec").ToString("F2");
         Invoke("ActiveResultCanvas",1);
     }
 
@@ -22,9 +24,7 @@ public class ResultSceneManager : MonoBehaviour
     }
 
     void ActiveResultCanvas(){
-        var rc = GameObject.Find("ResultCanvas");               
-        var timetext = GameObject.Find("TimeText");               
-        timetext.GetComponent<Text>().text = PlayerPrefs.GetInt("PlayerMin").ToString("00") + ":" + PlayerPrefs.GetFloat("PlayerSec").ToString("F2");
+        var rc = GameObject.Find("ResultCanvas");                      
         rc.GetComponent<Canvas>().enabled = true;
         
     } 

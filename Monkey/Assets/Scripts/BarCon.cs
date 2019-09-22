@@ -9,6 +9,14 @@ public class BarCon : MonoBehaviour
     private float scaleParam = 1f;
     [SerializeField] float limitTime = 180;
 
+
+
+    [SerializeField] float candleChangeTime = 1f;
+    private float candleTimer = 0;
+    [SerializeField] Sprite candle1;
+    [SerializeField] Sprite candle2;
+    [SerializeField] Sprite candle3;
+
     private float remainingTime;
     // Start is called before the first frame update
     void Start()
@@ -25,10 +33,26 @@ public class BarCon : MonoBehaviour
         if(scaleParam >= 0f && scaleParam <= 1f){
             var tr = lifeTimeBar.GetComponent<RectTransform>();            
             tr.localScale = new Vector2(scaleParam,1f);          
-            TimeText.GetComponent<Text>().text = remainingTime.ToString("F2");
+            TimeText.GetComponent<Text>().text = remainingTime.ToString("F2");            
         }else{
             TimeText.GetComponent<Text>().text = "0.00";
         }
+
+
+        //ロウソクの絵の切り替え
+        candleTimer += Time.deltaTime;
+        var bar = GameObject.Find("LifeTimeBar").GetComponent<Image>();
+
+        if(candleTimer >= candleChangeTime){
+            if(candleTimer >= candleChangeTime * 2){
+                bar.sprite = candle3;
+                candleTimer = 0f;
+            }else{
+                bar.sprite = candle2;
+            }            
+        }else{
+            bar.sprite = candle1;
+        }    
     }
 
     public void ShortenLifeTime(float time){
