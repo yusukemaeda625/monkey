@@ -1,17 +1,23 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UniRx.Triggers;
 using UniRx;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private GameObject effectPosition = null;
+    [SerializeField] private GameObject guardEffectPosition = null;
+    [SerializeField] private Sprite[] dashEffectSprites = null;
+    [SerializeField] private Sprite[] guardEffectSprites = null;
+    [SerializeField] private Sprite[] justGuardEffectSprites = null;
+    [SerializeField] private Sprite clearImage = null;
     private bool isGuarding = false;
     private bool isJustGuard = false;
     private bool hit = false;
     private bool isGuardStop = false;
-    private int justGuardDuration = 10;
+    private int justGuardDuration = 8;
     private int guardStopDuration = 30;
     private int timer = 0;
     private int stopTimer = 0;
@@ -19,12 +25,14 @@ public class PlayerController : MonoBehaviour
     private float duration = 0.3f;
     private float targetPosition;
     private Animator animator = null;
+    private Image effect = null;
     private int dash = Animator.StringToHash("dashTrigger");
     private int guard = Animator.StringToHash("guard");
 
     void Start()
     {
         animator = GetComponent<Animator>();
+        effect = GameObject.FindGameObjectWithTag("Effect").GetComponent<Image>();
 
         this.OnTriggerEnterAsObservable()
             .Subscribe(x =>
@@ -38,11 +46,13 @@ public class PlayerController : MonoBehaviour
                 if (isJustGuard)
                 {
                     StartCoroutine(JustGuardOnHit());
+                    StartCoroutine(JustGuardEffectController());
                     Debug.Log("Just Guard");
                 }
                 if (isGuarding)
                 {
                     StartCoroutine(GuardOnHit());
+                    StartCoroutine(GuardEffectController());
                     Debug.Log("Guard");
                 }
 
@@ -69,6 +79,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("D-Right")&& !isGuardStop)
         {
             targetPosition = tempPosition - movementVelocity;
+            StartCoroutine(DashEffectController());
             animator.SetTrigger(dash);
         }
 
@@ -79,6 +90,99 @@ public class PlayerController : MonoBehaviour
 
         tempVec.x = Mathf.Lerp(tempPosition, targetPosition, duration);
         transform.position = tempVec;
+    }
+
+    IEnumerator JustGuardEffectController()
+    {
+        effect.transform.position = Camera.main.WorldToScreenPoint(guardEffectPosition.transform.position);
+        for (int animationTimer = 0; animationTimer < 8; animationTimer++)
+        {
+            if (animationTimer < 8)
+            {
+                effect.sprite = justGuardEffectSprites[3];
+            }
+
+            if (animationTimer < 6)
+            {
+                effect.sprite = justGuardEffectSprites[2];
+            }
+
+            if (animationTimer < 4)
+            {
+                effect.sprite = justGuardEffectSprites[1];
+            }
+
+            if (animationTimer < 2)
+            {
+                effect.sprite = justGuardEffectSprites[0];
+            }
+
+            yield return null;
+        }
+
+        effect.sprite = clearImage;
+    }
+    
+    IEnumerator GuardEffectController()
+    {
+        effect.transform.position = Camera.main.WorldToScreenPoint(guardEffectPosition.transform.position);
+        for (int animationTimer = 0; animationTimer < 8; animationTimer++)
+        {
+            if (animationTimer < 8)
+            {
+                effect.sprite = guardEffectSprites[3];
+            }
+
+            if (animationTimer < 6)
+            {
+                effect.sprite = guardEffectSprites[2];
+            }
+
+            if (animationTimer < 4)
+            {
+                effect.sprite = guardEffectSprites[1];
+            }
+
+            if (animationTimer < 2)
+            {
+                effect.sprite = guardEffectSprites[0];
+            }
+
+            yield return null;
+        }
+
+        effect.sprite = clearImage;
+    }
+
+    IEnumerator DashEffectController()
+    {
+        effect.transform.position = Camera.main.WorldToScreenPoint(effectPosition.transform.position);
+        for (int animationTimer = 0; animationTimer < 12; animationTimer++)
+        {
+            if (animationTimer < 12)
+            {
+                effect.sprite = dashEffectSprites[3];
+            }
+            
+            if (animationTimer < 8)
+            {
+                effect.sprite = dashEffectSprites[2];
+            }
+            
+            if (animationTimer < 4)
+            {
+                effect.sprite = dashEffectSprites[1];
+            }
+            
+            if (animationTimer < 2)
+            {
+                effect.sprite = dashEffectSprites[0];
+            }
+
+            yield return null;
+        }
+
+        effect.sprite = clearImage;
     }
 
     IEnumerator JustGuard()
