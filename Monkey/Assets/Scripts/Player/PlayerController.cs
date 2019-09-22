@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     private bool hit = false;
     private bool isGuardStop = false;
     private int justGuardDuration = 10;
-    private int guardStopDuration = 10;
+    private int guardStopDuration = 30;
     private int timer = 0;
     private int stopTimer = 0;
     private float movementVelocity = 2;
@@ -30,6 +30,11 @@ public class PlayerController : MonoBehaviour
             .Subscribe(x =>
             {
                 hit = true;
+                if (!isGuarding && !isJustGuard)
+                {
+                    Debug.Log("Dead");
+                }
+                
                 if (isJustGuard)
                 {
                     StartCoroutine(JustGuardOnHit());
@@ -41,11 +46,6 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("Guard");
                 }
 
-                if (!isGuarding && !isJustGuard)
-                {
-                    Debug.Log("Dead");
-                }
-                
                 Destroy(x.gameObject);
             });
     }
@@ -66,13 +66,13 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(JustGuard());
         }
 
-        if (Input.GetButtonDown("D-Right")&& !isGuarding)
+        if (Input.GetButtonDown("D-Right")&& !isGuardStop)
         {
             targetPosition = tempPosition - movementVelocity;
             animator.SetTrigger(dash);
         }
 
-        if (Input.GetButtonDown("D-Left") && !isGuarding)
+        if (Input.GetButtonDown("D-Left") && !isGuardStop)
         {
             targetPosition = tempPosition + movementVelocity;
         }
@@ -83,6 +83,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator JustGuard()
     {
+        isGuarding = false;
         isJustGuard = true;
         for (timer = 0; timer < justGuardDuration; timer++)
         {
@@ -91,14 +92,12 @@ public class PlayerController : MonoBehaviour
 
         animator.SetBool(guard, false);
         isJustGuard = false;
-        isGuarding = false;
     }
 
     IEnumerator JustGuardOnHit()
     {
         animator.SetBool(guard, false);
         isJustGuard = false;
-        isGuarding = false;
         yield break;
     }
 
