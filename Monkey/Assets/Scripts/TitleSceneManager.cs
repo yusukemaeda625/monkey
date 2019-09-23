@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class TitleSceneManager : MonoBehaviour
 {    
     void Start(){
+        Application.targetFrameRate = 60;
         var canvas = GameObject.Find("FadeCanvas");
         canvas.GetComponent<Fade>().FadeIn();
     }

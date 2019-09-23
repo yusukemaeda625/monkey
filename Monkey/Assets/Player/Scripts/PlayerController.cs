@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx.Triggers;
 using UniRx;
-using UnityEditorInternal;
 using UnityEngine.Experimental.Animations;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -121,8 +120,10 @@ public class PlayerController : MonoBehaviour
                 bool dead = !isGuarding && !isJustGuard && !inMistfiner && !tsubameGaeshi;
 
                 if (dead)
-                {
-                    playerIsDead = true;
+                {   
+                    if(!x.CompareTag("Perry")){
+                        playerIsDead = true;    
+                    }                                        
                 }
 
                 if (inMistfiner && x.CompareTag("Enemy"))
@@ -335,6 +336,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (isBoss)
                 {
+                    GameObject.Find("BossPerry").GetComponent<PerryController>().Damage();
                     animator.ResetTrigger(bossHash);
                     animator.SetTrigger(bossHash);
                 }

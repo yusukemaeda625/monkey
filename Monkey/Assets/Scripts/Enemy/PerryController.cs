@@ -12,7 +12,7 @@ public class PerryController : MonoBehaviour
     public int hp = 3;
     private float timer = 0f;
     private float addForceParam = 0f;
-    public float SkillInterval = 5f;
+    public float SkillInterval = 10f;
 
     [SerializeField] float battleDistance = 10f;
     [SerializeField] float rainRate = 0.3f;
@@ -61,11 +61,16 @@ public class PerryController : MonoBehaviour
             //Destroy(this.gameObject);
         }
 
+        if(Input.GetKey(KeyCode.Q)){
+            Damage();
+        }
+
         if(isStan){
             Debug.Log("Stan Now");
             if(hp != oldHp){
                 isStan = false;
                 oldHp = hp;
+                Kick();
             }
             GetComponent<Animator>().SetBool("Piyo",true);            
             return;
@@ -116,14 +121,24 @@ public class PerryController : MonoBehaviour
             break;
             case 2 :
             {
-                //第二形態                
-                var r = Random.Range(0f,10f);
-                Debug.Log(r);
-                if(r >= 5f){
-                    RandomCannonRash();                    
-                }else{
-                    CannonRain();
-                }               
+                //第二形態            
+                float t = 0f;
+                for(int i = 0; i < 3;i++){
+                    Invoke("ShotCannon",t);
+                    t += 0.5f;
+                }
+                t += 1f;
+                Invoke("CannonRain",t);
+
+                t += 3f;
+                for(int i = 0; i < 3;i++){
+                    t += 0.5f;
+                    Invoke("ShotCannon",t);                    
+                }
+                t += 1f;
+                Invoke("CannonRain",t);
+                t += 3f;
+                Invoke("ShotBigCannon", t);             
             }
             break;
             case 3 :
@@ -173,7 +188,7 @@ public class PerryController : MonoBehaviour
     void CannonRain(){
         float shotRate = rainRate;        
         float t = 0f;    
-        for(int i = 0; i < 10; i++){            
+        for(int i = 0; i < 5; i++){            
             Invoke("ShotRainCannon",t);
             t += shotRate;            
         }
@@ -199,24 +214,29 @@ public class PerryController : MonoBehaviour
     private void ShotBullet(){
         Instantiate(bulletPrefab, transform.position + shotPos, Quaternion.identity);    
         GetComponent<Animator>().SetTrigger("Shot");
+        timer = 0;
     }
     private void ShotCannon(){
         Instantiate(cannonPrefab, transform.position + shotPos, Quaternion.identity);     
         GetComponent<Animator>().SetTrigger("Shot");
+        timer = 0;
     }
 
     private void ShotBigCannon(){
         Instantiate(BigCannonPrefab, transform.position + shotPos, Quaternion.identity);     
         GetComponent<Animator>().SetTrigger("Shot");
+        timer = 0;
     }
 
     private void ShotRainCannon(){  
         Instantiate(rainCannonPrefab, transform.position + shotPos, Quaternion.identity);  
         GetComponent<Animator>().SetTrigger("Shot");                                       
+        timer = 0;
     }
 
     private void ShotDownCannon(){
-        Instantiate(downCannonPrefab,transform.position + shotPos, Quaternion.identity);
+        Instantiate(downCannonPrefab,transform.position + shotPos, Quaternion.identity);  
+        timer = 0;      
     }
 
     void OnTriggerEnter(Collider col){        
