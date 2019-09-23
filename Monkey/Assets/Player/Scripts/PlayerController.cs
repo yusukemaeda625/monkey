@@ -231,7 +231,12 @@ public class PlayerController : MonoBehaviour
 
             if (Input.GetButtonDown("SelfKillL") && Input.GetButtonDown("SelfKillR"))
             {
-                // 自殺
+                StartCoroutine(SelfKill());
+            }
+
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                StartCoroutine(SelfKill());
             }
         }
 
@@ -248,7 +253,7 @@ public class PlayerController : MonoBehaviour
             SkillSelector();
         }
 
-        if (playerIsDead || Input.GetKeyDown(KeyCode.D))
+        if (playerIsDead)
         {
             StartCoroutine(PlayerDead());
         }
@@ -351,6 +356,25 @@ public class PlayerController : MonoBehaviour
         freezing = false;
     }
 
+    IEnumerator SelfKill()
+    {
+        freezing = true;
+        deathCounts++;
+        
+        for (int i = 0; i < 30; i++)
+        {
+            if (i == 15)
+            {
+                Time.timeScale = 0f;
+                inSkillSelect = true;
+            }
+
+            yield return null;
+        }
+
+        freezing = false;
+    }
+    
     IEnumerator PlayerDead()
     {
         freezing = true;
