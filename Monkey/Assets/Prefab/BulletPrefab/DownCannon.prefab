@@ -154,4 +154,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   durable: 1
   speed: -0.2
-  yspeed: -0.2
+  yspeed: 0

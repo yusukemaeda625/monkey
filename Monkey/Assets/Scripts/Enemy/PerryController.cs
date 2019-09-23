@@ -16,28 +16,30 @@ public class PerryController : MonoBehaviour
 
     [SerializeField] float battleDistance = 10f;
     [SerializeField] float rainRate = 0.3f;
-    [SerializeField] GameObject player;
+    GameObject player;
 
-    [SerializeField] float kickField = 1f;
+    [SerializeField] float kickField = 4f;
     [SerializeField] float kickPower = 3f;
+    [SerializeField] float kickLag = 1f;
 
     [SerializeField] int numCannonRash = 4;
     [SerializeField] float cannonRashInterval = 0.4f;
 
     [SerializeField] Vector3 shotPos = Vector3.zero;
-
+    [SerializeField] float shotStopDist = 3f;
     public bool isBattle = false;
     //isStan == true (can call Damage)
     public bool isStan = false;
     public float stanTime = 0f;
     private float stanTimer = 0f;
 
-    private bool isYoroke = false;
+    public bool isYoroke = false;
     private float yorokeTimer = 0f;
-    private float yorokeTime = 3f;
+    private float yorokeTime = 5f;
 
     private int oldHp;
-    private float kickLag = 0.3f;
+    
+    bool iskicked = false;
      void Start()
     {        
         oldHp = hp;
@@ -46,7 +48,7 @@ public class PerryController : MonoBehaviour
     }
     
     void Update()
-    {                
+    {   
         if(hp == 0){
             //死ぬ処理
             //TODO : 死ぬアニメーションを再生
@@ -54,40 +56,44 @@ public class PerryController : MonoBehaviour
         }
 
         if(isStan){
+            Debug.Log("Stan Now");
             if(hp != oldHp){
                 isStan = false;
                 oldHp = hp;
             }
-            stanTimer += Time.deltaTime;
-            if(stanTimer >= stanTime){
-                //isStan = false;
-                //TODO : HPによってアイドルアニメーションを洗濯して再生
-            }
+            GetComponent<Animator>().SetBool("Piyo",true);            
             return;
-        }
+        }else{
+            GetComponent<Animator>().SetBool("Piyo",false);            
+        }        
 
         if(isYoroke){
+            timer = 0f;
+            Debug.Log("YOROKE");
             yorokeTimer += Time.deltaTime;
 
-            if(yorokeTimer >= yorokeTime - 2f){
+            if(yorokeTimer >= yorokeTime - 3f){
                 //TODO : 待機ポーズ                            
-            }else if(yorokeTimer >= yorokeTime - 1f){
+            }else if(yorokeTimer >= yorokeTime - 2f){
                 //TODO : 下に打つポーズ
-                ShotDownCannon();
+                //ShotDownCannon();
+                ShotCannon();
             }
             else if(yorokeTimer >= yorokeTime){
                 isYoroke = false;
+                yorokeTime = 0f;
+                Debug.Log("clear yoroke");
                 //TODO : ガードアニメーション再生
-
             }
         }
 
 
         var ve = player.transform.position - this.transform.position;
 
-        if(ve.magnitude <= kickField){
-            Invoke("Kick",kickLag);
-            //Kick();
+        if(ve.magnitude <= kickField && hp == 1 && !isYoroke && !iskicked){
+            GetComponent<Animator>().SetTrigger("Kick");
+            Invoke("Kick",kickLag);            
+            iskicked = true;
             return;
         }
 
@@ -95,9 +101,8 @@ public class PerryController : MonoBehaviour
             isBattle = true;            
 
 
-        if(timer >= SkillInterval){
-            timer = 0f;
-
+        if(timer >= SkillInterval && ve.magnitude >= shotStopDist && !isYoroke){
+            timer = 0f;            
             switch(hp){
             case 1 :
             {
@@ -177,10 +182,17 @@ public class PerryController : MonoBehaviour
         }
     }
     
-    void Kick(){        
-        Damage();
-        Debug.Log("Perrys Kick");
-        player.GetComponent<PlayerController>().KnockBackPlayer(-kickPower);
+    void Kick(){                
+        Debug.Log("Perrys Kick");        
+        var gs = player.GetComponent<PlayerController>().GetGuardState();        
+        if(!gs){
+            player.GetComponent<PlayerController>().KnockBackPlayer(-kickPower);
+        }
+        if(gs){
+            Debug.Log("Kick Guard!!!");
+            isYoroke = true;
+        }
+        iskicked = false;
     }
 
     private void ShotBullet(){
@@ -206,10 +218,11 @@ public class PerryController : MonoBehaviour
         Instantiate(downCannonPrefab,transform.position + shotPos, Quaternion.identity);
     }
 
-    void OnTriggerEnter(Collider col){
+    void OnTriggerEnter(Collider col){        
         if(col.tag == "BigCannon"){
             if(hp > 1){
                 Piyo();
+                Debug.Log("Perry Collide Big Cannon");
             }
             if(hp == 1){
                 if(isYoroke){
@@ -217,14 +230,6 @@ public class PerryController : MonoBehaviour
                 }
             }    
         }
-        if(col.tag == "Player"){
-            Invoke("YorokeCheck",kickLag);
-        }
-    }
-
-    void YorokeCheck(){
-        //player.GetGurdState()        
-        //if(State == gurd) { isYoroke = true; play yoroke animation}
     }
 
     //ペリーが攻撃を受けた時の処理
