@@ -6,6 +6,12 @@ TagManager:
   tags:
   - Bullet
   - BigCannon
+  - Effect
+  - Enemy
+  - Perry
+  - CameraTarget
+  - SkillImage
+  - RifleBullet
   layers:
   - Default
   - TransparentFX

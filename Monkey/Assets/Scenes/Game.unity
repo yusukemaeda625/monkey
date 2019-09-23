@@ -9142,7 +9142,7 @@ MonoBehaviour:
   downCannonPrefab: {fileID: 3218536918561581067, guid: b3cede3bd2fba4e5b97738d8f85780fb,
     type: 3}
   hp: 3
-  SkillInterval: 5
+  SkillInterval: 2.5
   battleDistance: 10
   rainRate: 0.3
   kickField: 3
@@ -9156,6 +9156,7 @@ MonoBehaviour:
   isStan: 0
   stanTime: 0
   isYoroke: 0
+  isDead: 0
 --- !u!1 &1816314512
 GameObject:
   m_ObjectHideFlags: 0
@@ -9838,7 +9839,7 @@ MonoBehaviour:
   downCannonPrefab: {fileID: 3218536918561581067, guid: b3cede3bd2fba4e5b97738d8f85780fb,
     type: 3}
   hp: 3
-  SkillInterval: 4
+  SkillInterval: 2.5
   battleDistance: 10
   rainRate: 0.3
   kickField: 4
@@ -9852,6 +9853,7 @@ MonoBehaviour:
   isStan: 0
   stanTime: 0
   isYoroke: 0
+  isDead: 0
 --- !u!136 &1972120732
 CapsuleCollider:
   m_ObjectHideFlags: 0

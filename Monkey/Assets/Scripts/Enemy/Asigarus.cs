@@ -15,6 +15,7 @@ public class Asigarus : MonoBehaviour
     public GameObject bulletPrefab;
     public GameObject rifleBulletPrefab;
 
+    private bool isDead = false;
     [SerializeField] Vector3 shotPos = Vector3.zero;
 
     [SerializeField] float fireRate = 0.15f;
@@ -34,6 +35,9 @@ public class Asigarus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(isDead)
+            return;
+            
         var ve = player.transform.position - this.transform.position;
         
         if(ve.magnitude > shotField || ve.magnitude <= killDistance){
@@ -78,5 +82,10 @@ public class Asigarus : MonoBehaviour
 
     void ShotRifleBullet(){
         Instantiate(rifleBulletPrefab, transform.position + shotPos, Quaternion.identity);     
+    }
+
+    public void Deth(){
+        GetComponent<Animator>().SetBool("Dead",true);
+        isDead = true;
     }
 }
