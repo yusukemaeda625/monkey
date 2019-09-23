@@ -11,7 +11,7 @@ public class DarkController : MonoBehaviour
     public float slowSpeed = 1;
     public float normalSpeed = 3;
     private float moveSpeed = 1;
-    private bool isMove = false;
+    public bool isMove = false;
     private float timer = 0f;
     void Start()
     {
@@ -34,8 +34,8 @@ public class DarkController : MonoBehaviour
     public void Darkness(){
         timer = 0f;
         isMove =  false;
-        UpperImage.transform.position = (new Vector3(-1030,0,0));
-        LowerImage.transform.position = (new Vector3(1400,0,0));
+        UpperImage.transform.position = (new Vector3(-1403,0,0));
+        LowerImage.transform.position = (new Vector3(1425,0,0));
     }
 
     public void Open(){

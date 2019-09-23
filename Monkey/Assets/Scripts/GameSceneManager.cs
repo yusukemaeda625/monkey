@@ -10,22 +10,34 @@ public class GameSceneManager : MonoBehaviour
     private List<Material> changedMaterials = new List<Material>();
     private Material defaultSkyBoxMaterial;
     private Material blackMat;
+
+    [SerializeField] Material bloomMat;
+    private float bloomParam = 0f;
+    private bool isOpenedDark = false;
+    private float blspeed = 1f;
+
+    private GameObject perryWall;
+
+    private GameObject perry;
     void Start()
     {
         var canvas = GameObject.Find("FadeCanvas");
         canvas.GetComponent<Fade>().FadeIn();             
         //defaultSkyBoxMaterial = RenderSettings.skybox;
         blackMat = new Material(Shader.Find("Unlit/black"));
+        perry = GameObject.Find("Perry");
+        perryWall = GameObject.Find("BattleWall");
     }
     
     void Update()
-    {
-        if (Input.GetKey(KeyCode.Space)) {            
-            ChangeSceneMatsBKWH();
+    {    
+        if(isOpenedDark && bloomParam <= 1f){
+            if(bloomParam <= 1f && bloomParam >= 0f){
+                bloomParam += blspeed * Time.deltaTime;
+                bloomMat.SetFloat("_Bloom",bloomParam);
+            }
         }
-        if(Input.GetKey(KeyCode.Escape)){
-            ResetMats();
-        }
+        perryWall.GetComponent<BoxCollider>().enabled = perry.GetComponent<PerryController>().isBattle;
     }
 
     public void GameOver(){
@@ -60,7 +72,8 @@ public class GameSceneManager : MonoBehaviour
 
     //シーン明転    
     public void OpenDarkness(){
-        GameObject.Find("Dark").GetComponent<DarkController>().Open();
+        GameObject.Find("DarkCanvas").GetComponent<DarkController>().Open();
+        isOpenedDark = true;
     }
 
     //白黒シーン
@@ -75,7 +88,7 @@ public class GameSceneManager : MonoBehaviour
                             if(!changedMaterials.Contains(m)){                
                                 changedMaterials.Add(m);
                                 dictionaryMaterialShader.Add(m,m.shader);
-                               m.shader = Shader.Find("Unlit/white");
+                               m.shader = Shader.Find("Unlit/black");
                             }
                         }
                     }else{
@@ -83,7 +96,7 @@ public class GameSceneManager : MonoBehaviour
                             if(!changedMaterials.Contains(m)){
                                 changedMaterials.Add(m);
                                 dictionaryMaterialShader.Add(m,m.shader);
-                                m.shader = Shader.Find("Unlit/black");
+                                m.shader = Shader.Find("Unlit/white");
                             }
                         }
                     }
