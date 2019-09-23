@@ -1693,7 +1693,7 @@ GameObject:
   - component: {fileID: 3313102647542748551}
   - component: {fileID: 3313102647542748548}
   - component: {fileID: 3313102647542748549}
-  - component: {fileID: 1465649633369186114}
+  - component: {fileID: 7581482508608241000}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1731,7 +1731,7 @@ Animator:
   m_GameObject: {fileID: 6835175999798135944}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 8483fc99c1e3a43d2849efb7fe460f79, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 38fe790aec4554947b06825306a20863, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1798,6 +1798,18 @@ MonoBehaviour:
   - {fileID: 21300000, guid: f0e980c83cb7f453288c3495ef0378d6, type: 3}
   - {fileID: 21300000, guid: e7f1168c5626443b0ab608ff0cd5df9e, type: 3}
   - {fileID: 21300000, guid: 043be5921280c4a3e89d869d42a762ba, type: 3}
+  swallowEffectSprites:
+  - {fileID: 21300000, guid: 0e5726580fadc4f58b0c9af1fa0e3240, type: 3}
+  - {fileID: 21300000, guid: ce5877ab080c04274807d569ca784902, type: 3}
+  - {fileID: 21300000, guid: 7df75eb00a9b646029b68155bfc013f4, type: 3}
+  - {fileID: 21300000, guid: f49b92b043f8d4639a7c17459e08ba2d, type: 3}
+  - {fileID: 21300000, guid: c9a9a49f7dc2b45309c5f1f3dc720591, type: 3}
+  - {fileID: 21300000, guid: c020b7771f02c4e9f9852b948fa8079b, type: 3}
+  - {fileID: 21300000, guid: f1671b14950684cb899b4be2ed576988, type: 3}
+  - {fileID: 21300000, guid: d5c7dcfb8e2c3469aa0ad41a7a0b30e0, type: 3}
+  - {fileID: 21300000, guid: 49dcd2a92f83c4474a908aa8159d5df8, type: 3}
+  - {fileID: 21300000, guid: fccc2883d4ec343d3904c75c61512aae, type: 3}
+  - {fileID: 21300000, guid: f25205e6cc6ac4424b0beb2b9d06b89e, type: 3}
   clearImage: {fileID: 21300000, guid: 7e3f43ac2aed84c328092fa81b5c6cb0, type: 3}
   effectObject: {fileID: 4253596041710152679, guid: ea485162089394b908fdafd4466ee831,
     type: 3}
@@ -1806,57 +1818,102 @@ MonoBehaviour:
   chargeDuration: 10
   knockBackVelocity: 5
   rifleKnockBackVelocity: 1
---- !u!114 &1465649633369186114
-MonoBehaviour:
+--- !u!82 &7581482508608241000
+AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6835175999798135944}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3759e2aae0f7b9a47bb98fc64bf3c543, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingMode: 1
-  m_WrapMode: 0
-  m_Clip: {fileID: 7400000, guid: f2aaf9cb553b848e1aad37b1fec446f4, type: 2}
-  m_States:
-  - clip: {fileID: 7400000, guid: f2aaf9cb553b848e1aad37b1fec446f4, type: 2}
-    name: Default
-    defaultState: 1
-  - clip: {fileID: 7400000, guid: 7d11a3e503cf148d88af83abf3151fe8, type: 2}
-    name: Dash
-    defaultState: 0
-  - clip: {fileID: 7400000, guid: f6377a783ccca446daf47479a2c4a004, type: 2}
-    name: Guard
-    defaultState: 0
-  - clip: {fileID: 7400000, guid: 56d7f8fb236914b698561001e4e161d0, type: 2}
-    name: BackStep
-    defaultState: 0
-  - clip: {fileID: 7400000, guid: 8795fbc00d08641b8af40e86730d28c0, type: 2}
-    name: GuardStop
-    defaultState: 0
-  - clip: {fileID: 7400000, guid: eb87fb659a5cf49cc9ea8f632268652c, type: 2}
-    name: Swallow
-    defaultState: 0
-  - clip: {fileID: 7400000, guid: 3fe4708a1351947b7acacf4c76fd6b15, type: 2}
-    name: Mistfiner
-    defaultState: 0
-  - clip: {fileID: 7400000, guid: 8918fa6e8bc0447c5a7d10d8fde96292, type: 2}
-    name: Revive
-    defaultState: 0
-  - clip: {fileID: 7400000, guid: e4040d63a0de842c8ae3ada54a087e83, type: 2}
-    name: GameOver
-    defaultState: 0
-  - clip: {fileID: 7400000, guid: 6f373ff695ea44475b33a65485114c02, type: 2}
-    name: BossFinish
-    defaultState: 0
-  - clip: {fileID: 7400000, guid: 54eb10ba52f0a41b6acfcdbd238dbdf0, type: 2}
-    name: MobFinish
-    defaultState: 0
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6878949553254742510
 GameObject:
   m_ObjectHideFlags: 0
