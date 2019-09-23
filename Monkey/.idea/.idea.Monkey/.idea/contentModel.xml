@@ -277,16 +277,21 @@
           </e>
         </e>
         <e p="Scripts" t="Include">
-          <e p="Asigarus.cs" t="Include" />
           <e p="BackGroundController.cs" t="Include" />
           <e p="BarCon.cs" t="Include" />
-          <e p="BulletAttr.cs" t="Include" />
+          <e p="BloomEffect.cs" t="Include" />
+          <e p="Enemy" t="Include">
+            <e p="Asigarus.cs" t="Include" />
+            <e p="BigCannon.cs" t="Include" />
+            <e p="BulletAttr.cs" t="Include" />
+            <e p="PerryController.cs" t="Include" />
+            <e p="RainCannon.cs" t="Include" />
+          </e>
           <e p="Fade.cs" t="Include" />
           <e p="GameSceneManager.cs" t="Include" />
           <e p="GameTimer.cs" t="Include" />
           <e p="MotionBlurEffect.cs" t="Include" />
           <e p="MyGameTimer.cs" t="Include" />
-          <e p="PerryController.cs" t="Include" />
           <e p="PostEffect.cs" t="Include" />
           <e p="ResultSceneManager.cs" t="Include" />
           <e p="TitleSceneManager.cs" t="Include" />
@@ -296,6 +301,7 @@
         </e>
         <e p="Shaders" t="Include">
           <e p="black.shader" t="Include" />
+          <e p="bloom.shader" t="Include" />
           <e p="GrayScale.shader" t="Include" />
           <e p="MotionBlur.shader" t="Include" />
           <e p="Toon.shader" t="Include" />
