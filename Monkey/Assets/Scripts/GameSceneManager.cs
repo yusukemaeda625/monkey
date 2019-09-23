@@ -22,7 +22,7 @@ public class GameSceneManager : MonoBehaviour
         canvas.GetComponent<Fade>().FadeIn();             
         //defaultSkyBoxMaterial = RenderSettings.skybox;
         blackMat = new Material(Shader.Find("Unlit/black"));
-        perry = GameObject.Find("Perry");        
+        perry = GameObject.Find("BossPerry");        
     }
     
     void Update()
@@ -33,6 +33,10 @@ public class GameSceneManager : MonoBehaviour
                 bloomMat.SetFloat("_Bloom",bloomParam);
             }
         }        
+
+        if(perry.GetComponent<PerryController>().isDead){
+            Invoke("ToResultScene",3f);
+        }
     }
 
     public void GameOver(){

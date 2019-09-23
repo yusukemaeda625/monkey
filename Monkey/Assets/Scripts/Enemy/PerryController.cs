@@ -12,7 +12,7 @@ public class PerryController : MonoBehaviour
     public int hp = 3;
     private float timer = 0f;
     private float addForceParam = 0f;
-    public float SkillInterval = 10f;
+    public float SkillInterval = 5f;
 
     [SerializeField] float battleDistance = 10f;
     [SerializeField] float rainRate = 0.3f;
@@ -37,6 +37,8 @@ public class PerryController : MonoBehaviour
     private float yorokeTimer = 0f;
     private float yorokeTime = 5f;
 
+    public bool isDead = false;
+
     private int oldHp;
     
     bool iskicked = false;
@@ -49,10 +51,14 @@ public class PerryController : MonoBehaviour
     
     void Update()
     {   
+        if(isDead)
+            return;
         if(hp == 0){
             //死ぬ処理
             //TODO : 死ぬアニメーションを再生
-            Destroy(this.gameObject);
+            GetComponent<Animator>().SetBool("Dead",true);
+            isDead = true;            
+            //Destroy(this.gameObject);
         }
 
         if(isStan){
@@ -67,22 +73,13 @@ public class PerryController : MonoBehaviour
             GetComponent<Animator>().SetBool("Piyo",false);            
         }        
 
-        if(isYoroke){
-            timer = 0f;
-            Debug.Log("YOROKE");
-            yorokeTimer += Time.deltaTime;
-
-            if(yorokeTimer >= yorokeTime - 3f){
-                //TODO : 待機ポーズ                            
-            }else if(yorokeTimer >= yorokeTime - 2f){
-                //TODO : 下に打つポーズ
-                //ShotDownCannon();
-                ShotCannon();
-            }
-            else if(yorokeTimer >= yorokeTime){
+        if(isYoroke){            
+            yorokeTimer += Time.deltaTime;            
+            if(yorokeTimer >= yorokeTime){
                 isYoroke = false;
                 yorokeTime = 0f;
                 Debug.Log("clear yoroke");
+                GetComponent<Animator>().SetBool("Yoroke",false);
                 //TODO : ガードアニメーション再生
             }
         }
@@ -190,7 +187,11 @@ public class PerryController : MonoBehaviour
         }
         if(gs){
             Debug.Log("Kick Guard!!!");
+            yorokeTimer = 0f;
             isYoroke = true;
+            Invoke("ShotCannon",2);
+            GetComponent<Animator>().SetBool("Yoroke",true);
+            Debug.Log("YOROKE");
         }
         iskicked = false;
     }
