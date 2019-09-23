@@ -24,6 +24,8 @@ public class PerryController : MonoBehaviour
     [SerializeField] int numCannonRash = 4;
     [SerializeField] float cannonRashInterval = 0.4f;
 
+    [SerializeField] Vector3 shotPos = Vector3.zero;
+
     public bool isBattle = false;
     //isStan == true (can call Damage)
     public bool isStan = false;
@@ -116,7 +118,7 @@ public class PerryController : MonoBehaviour
                 var r = Random.Range(0f,10f);
                 Debug.Log(r);
                 if(r >= 5f){
-                    RandomCannonRash();
+                    RandomCannonRash();                    
                 }else{
                     CannonRain();
                 }               
@@ -182,22 +184,26 @@ public class PerryController : MonoBehaviour
     }
 
     private void ShotBullet(){
-        Instantiate(bulletPrefab, transform.position, Quaternion.identity);    
+        Instantiate(bulletPrefab, transform.position + shotPos, Quaternion.identity);    
+        GetComponent<Animator>().SetTrigger("Shot");
     }
     private void ShotCannon(){
-        Instantiate(cannonPrefab, transform.position, Quaternion.identity);     
+        Instantiate(cannonPrefab, transform.position + shotPos, Quaternion.identity);     
+        GetComponent<Animator>().SetTrigger("Shot");
     }
 
     private void ShotBigCannon(){
-        Instantiate(BigCannonPrefab, transform.position, Quaternion.identity);     
+        Instantiate(BigCannonPrefab, transform.position + shotPos, Quaternion.identity);     
+        GetComponent<Animator>().SetTrigger("Shot");
     }
 
     private void ShotRainCannon(){  
-        Instantiate(rainCannonPrefab, transform.position, Quaternion.identity);                                           
+        Instantiate(rainCannonPrefab, transform.position + shotPos, Quaternion.identity);  
+        GetComponent<Animator>().SetTrigger("Shot");                                       
     }
 
     private void ShotDownCannon(){
-        Instantiate(downCannonPrefab,transform.position, Quaternion.identity);
+        Instantiate(downCannonPrefab,transform.position + shotPos, Quaternion.identity);
     }
 
     void OnTriggerEnter(Collider col){

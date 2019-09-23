@@ -17,7 +17,7 @@ public class downBullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(speed, -speed, 0);   
+        transform.Translate(speed, speed, 0);   
         if(durable == 0){
             Destroy(this.gameObject);
         }

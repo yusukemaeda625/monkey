@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3244961633233347888}
   - component: {fileID: 3244961633233347889}
   - component: {fileID: 5975465104819258046}
+  - component: {fileID: 2042947660814269668}
   m_Layer: 0
   m_Name: BigCannon
   m_TagString: BigCannon
@@ -100,7 +101,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3244961633233347890}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 70c057de5cd7e432dbe2c0eceb0bb596, type: 3}
   m_Name: 
@@ -122,3 +123,17 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2042947660814269668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3244961633233347890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 815d1271d1ac6499880be68b860b9dc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durable: 5
+  speed: -0.2
