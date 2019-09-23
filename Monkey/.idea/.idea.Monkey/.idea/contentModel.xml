@@ -4,6 +4,14 @@
     <e p="$PROJECT_DIR$" t="IncludeRecursive">
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="Player" t="Include">
+          <e p="Scripts" t="Include">
+            <e p="BulletFactoryManager.cs" t="Include" />
+            <e p="BulletTest.cs" t="Include" />
+            <e p="CameraController.cs" t="Include" />
+            <e p="PlayerController.cs" t="Include" />
+          </e>
+        </e>
         <e p="Plugins" t="Include">
           <e p="UniRx" t="Include">
             <e p="Scripts" t="Include">
@@ -269,24 +277,74 @@
           </e>
         </e>
         <e p="Scripts" t="Include">
+          <e p="Asigarus.cs" t="Include" />
+          <e p="BackGroundController.cs" t="Include" />
+          <e p="BarCon.cs" t="Include" />
+          <e p="BulletAttr.cs" t="Include" />
+          <e p="Fade.cs" t="Include" />
+          <e p="GameSceneManager.cs" t="Include" />
+          <e p="GameTimer.cs" t="Include" />
           <e p="MotionBlurEffect.cs" t="Include" />
-          <e p="Player" t="Include">
-            <e p="BulletFactoryManager.cs" t="Include" />
-            <e p="BulletTest.cs" t="Include" />
-            <e p="CameraController.cs" t="Include" />
-            <e p="PlayerController.cs" t="Include" />
-          </e>
+          <e p="MyGameTimer.cs" t="Include" />
+          <e p="PerryController.cs" t="Include" />
           <e p="PostEffect.cs" t="Include" />
+          <e p="ResultSceneManager.cs" t="Include" />
+          <e p="TitleSceneManager.cs" t="Include" />
+          <e p="UI" t="Include">
+            <e p="DarkController.cs" t="Include" />
+          </e>
         </e>
         <e p="Shaders" t="Include">
+          <e p="black.shader" t="Include" />
           <e p="GrayScale.shader" t="Include" />
           <e p="MotionBlur.shader" t="Include" />
           <e p="Toon.shader" t="Include" />
+          <e p="white.shader" t="Include" />
+        </e>
+        <e p="SimpleAnimationComponent" t="Include">
+          <e p="CustomPlayableExtensions.cs" t="Include" />
+          <e p="Editor" t="Include">
+            <e p="SimpleAnimationComponent-Editor.asmdef" t="Include" />
+            <e p="SimpleAnimationEditor.cs" t="Include" />
+          </e>
+          <e p="SimpleAnimation.cs" t="Include" />
+          <e p="SimpleAnimation_impl.cs" t="Include" />
+          <e p="SimpleAnimationComponent.asmdef" t="Include" />
+          <e p="SimpleAnimationPlayable.cs" t="Include" />
+          <e p="SimpleAnimationPlayable_States.cs" t="Include" />
+          <e p="Tests" t="Include">
+            <e p="AnimationProxy.cs" t="Include" />
+            <e p="IAnimation.cs" t="Include" />
+            <e p="PerformanceTests" t="Include">
+              <e p="ComplexWithTransition" t="Include">
+                <e p="SimpleAnimationTransitions.cs" t="Include" />
+              </e>
+              <e p="TestUI.cs" t="Include" />
+            </e>
+            <e p="PlaymodeTests" t="Include">
+              <e p="ComparativeTests" t="Include">
+                <e p="BaseConditionsTests.cs" t="Include" />
+                <e p="ClipManagementTests.cs" t="Include" />
+                <e p="ComparativeTestFixture.cs" t="Include" />
+                <e p="DifferencesTests.cs" t="Include" />
+                <e p="MiscTests.cs" t="Include" />
+                <e p="PlaybackTests.cs" t="Include" />
+                <e p="QueueTests.cs" t="Include" />
+                <e p="StateAccessTests.cs" t="Include" />
+              </e>
+              <e p="SimpleAnimationTests.cs" t="Include" />
+            </e>
+            <e p="SimpleAnimation-Tests.asmdef" t="Include" />
+            <e p="SimpleAnimationProxy.cs" t="Include" />
+          </e>
         </e>
       </e>
       <e p="Monkey.sln" t="IncludeFlat" />
       <e p="obj" t="ExcludeRecursive" />
       <e p="Packages" t="ExcludeRecursive" />
+      <e p="SimpleAnimation-Tests.csproj" t="IncludeRecursive" />
+      <e p="SimpleAnimationComponent-Editor.csproj" t="IncludeRecursive" />
+      <e p="SimpleAnimationComponent.csproj" t="IncludeRecursive" />
       <e p="Temp/bin" t="ExcludeRecursive" />
       <e p="UniRx.csproj" t="IncludeRecursive" />
     </e>
