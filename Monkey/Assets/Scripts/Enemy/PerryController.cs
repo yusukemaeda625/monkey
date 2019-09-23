@@ -16,6 +16,7 @@ public class PerryController : MonoBehaviour
     [SerializeField] GameObject player;
 
     [SerializeField] float kickField = 1f;
+    [SerializeField] float kickPower = 3f;
     void Start()
     {        
         player = GameObject.Find("Player");
@@ -25,17 +26,17 @@ public class PerryController : MonoBehaviour
     {                
         if(hp == 0){
             //死ぬ処理
+            
+        }
+        var ve = player.transform.position - this.transform.position;
 
+        if(ve.magnitude <= kickField){
+            Kick();
+            return;
         }
 
         if(timer >= SkillInterval){
             timer = 0f;
-            var ve = player.transform.position - this.transform.position;
-
-            if(ve.magnitude <= kickField){
-                Kick();
-                return;
-            }
 
             switch(hp){
             case 1 :
@@ -76,13 +77,13 @@ public class PerryController : MonoBehaviour
         }
     }
     
-    void Kick(){
-        //プレイヤーノックバック
-        //player.GetComponent<PlayerController>().
+    void Kick(){        
+        Debug.Log("Perrys Kick");
+        player.GetComponent<PlayerController>().KnockBackPlayer(-kickPower);
     }
 
     void Gatling(){
-        
+
     }
 
     private void ShotBullet(){
