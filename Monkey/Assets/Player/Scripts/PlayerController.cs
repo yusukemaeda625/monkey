@@ -75,14 +75,15 @@ public class PlayerController : MonoBehaviour
             {
                 hit = true;
                 bool dead = !isGuarding && !isJustGuard && !inMistfiner && !tsubameGaeshi;
+                
                 if (dead)
                 {
-                    Debug.Log("Dead");
+                    playerIsDead = true;
                 }
 
                 if (inMistfiner)
                 {
-                    Debug.Log("Batto");
+                    
                 }
                 
                 if (tsubameGaeshi)
@@ -94,7 +95,6 @@ public class PlayerController : MonoBehaviour
                 {
                     StartCoroutine(JustGuardOnHit());
                     StartCoroutine(JustGuardEffectController());
-                    Debug.Log("Just Guard");
                 }
                 if (isGuarding)
                 {
@@ -103,7 +103,6 @@ public class PlayerController : MonoBehaviour
                     //animator.SetTrigger(guardStop);
                     simpleAnim.Play("GuardStop");
                     StartCoroutine(GuardEffectController());
-                    Debug.Log("Guard");
                 }
 
                 Destroy(x.gameObject);
@@ -119,7 +118,6 @@ public class PlayerController : MonoBehaviour
         {
             isGuarding = true;
             simpleAnim.CrossFade("Guard", 0.1f);
-            //animator.SetBool(guard, true);
         }
 
         if (Input.GetButtonUp("Guard") && !isGuardStop)
@@ -132,14 +130,12 @@ public class PlayerController : MonoBehaviour
             targetPosition = tempPosition + movementVelocity;
             StartCoroutine(DashEffectController());
             simpleAnim.Play("Dash");
-            //animator.SetTrigger(dash);
         }
 
         if (Input.GetButtonDown("D-Left") && !isGuardStop && !isGuarding)
         {
             targetPosition = tempPosition - movementVelocity;
             simpleAnim.Play("BackStep");
-            //animator.SetTrigger(backStep);
         }
 
         if (Input.GetKeyDown(KeyCode.K))
@@ -157,14 +153,19 @@ public class PlayerController : MonoBehaviour
             simpleAnim.CrossFade("Default", 0.1f);
         }
 
+        if (playerIsDead)
+        {
+            OnDead();
+        }
+
         tempVec.x = Mathf.Lerp(tempPosition, targetPosition, duration);
         transform.position = tempVec;
     }
 
     void OnDead()
     {
+        Debug.Log("Player is Dead");
         // 死亡時のスキル取得処理
-        
     }
 
     void TsubameGaeshi()
@@ -316,5 +317,10 @@ public class PlayerController : MonoBehaviour
         
         isGuarding = false;
         isGuardStop = false;
+    }
+
+    public void KnockBackPlayer(float velocity)
+    {
+        targetPosition += velocity;
     }
 }
