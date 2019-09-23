@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour
     private bool finishBlow = false;
     private int timer = 0;
     private int stopTimer = 0;
-    private float movementVelocity = 2;
+    private float movementVelocity = 3;
     private float mistfinerVelocity = 4;
     private float duration = 0.3f;
     private float targetPosition;
@@ -100,6 +100,7 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     private bool skillSelectInit = false;
+    private int enemySouls = 0;
     
     private void Awake()
     {
@@ -175,15 +176,15 @@ public class PlayerController : MonoBehaviour
         var tempPosition = transform.position.x;
         float[] distances = null;
 
-        for (int i = 0; i < enemies.Length; i++)
-        {
-            distances[i] = Vector3.Distance(transform.position, enemies[i].transform.position);
-        }
-
-        if (Mathf.Min(distances) < 3)
-        {
-            canFinish = true;
-        }
+//        for (int i = 0; i < enemies.Length; i++)
+//        {
+//            distances[i] = Vector3.Distance(transform.position, enemies[i].transform.position);
+//        }
+//
+//        if (Mathf.Min(distances) < 3)
+//        {
+//            canFinish = true;
+//        }
 
         if (!freezing)
         {
@@ -213,30 +214,30 @@ public class PlayerController : MonoBehaviour
                 animator.SetTrigger(backStepHash);
             }
             
-            if (canSwallowBlade && Input.GetKeyDown(KeyCode.K))
+            if (canSwallowBlade && Input.GetButtonDown("SwallowBlade"))
             {
                 StartCoroutine(SwallowBlade());
             }
 
-            if (canMistfiner && Input.GetKeyDown(KeyCode.A))
+            if (canMistfiner && Input.GetButtonDown("Mistfiner"))
             {
                 StartCoroutine(Mistfiner());
             }
 
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetButtonDown("Execution"))
             {
                 StartCoroutine(NinjaExecution());
             }
 
-            if (Input.GetKeyDown(KeyCode.B))
+            if (Input.GetButtonDown("SelfKillL") && Input.GetButtonDown("SelfKillR"))
             {
-                StartCoroutine(DamageEffect());
+                // 自殺
             }
         }
 
         if (finishBlow)
         {
-            if (Input.GetKeyDown(KeyCode.J))
+            if (Input.GetButtonDown("Execution"))
             {
                 Time.timeScale = 1;
             }
@@ -316,6 +317,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator NinjaExecution()
     {
         freezing = true;
+        enemySouls++;
         
         animator.ResetTrigger(finishHash);
         animator.SetTrigger(finishHash);
