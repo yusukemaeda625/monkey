@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx.Triggers;
 using UniRx;
+using UnityEngine.Experimental.Animations;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
@@ -16,6 +17,20 @@ public class PlayerController : MonoBehaviour
         Guard
     }
     
+    #region SkillVariables
+
+    private bool canSwallowBlade = true;
+    private bool swallowBladePlus = false;
+    private bool swallowBladePlusPlus = false;
+    private bool canMistfiner = true;
+    private bool mistfinerPlus = false;
+    private bool mistfinerPlusPlus = false;
+    private bool advancedDash = false;
+    private bool advancedGuard = false;
+    private bool advancedStep = false;
+    
+    #endregion
+    
     #region EffectVariables
     
     [SerializeField] private GameObject effectPosition = null;
@@ -23,6 +38,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Sprite[] dashEffectSprites = null;
     [SerializeField] private Sprite[] guardEffectSprites = null;
     [SerializeField] private Sprite[] justGuardEffectSprites = null;
+    [SerializeField] private Sprite[] swallowEffectSprites = null;
     [SerializeField] private Sprite clearImage = null;
     [SerializeField] private GameObject effectObject = null;
     private Image effect = null;
@@ -31,7 +47,7 @@ public class PlayerController : MonoBehaviour
 
     #region PlayerMovementVariables
     
-    [SerializeField] private int justGuardDuration = 8;
+    [SerializeField] private int justGuardDuration = 6;
     [SerializeField] private int guardStopDuration = 20;
     [SerializeField] private int chargeDuration = 10;
     [SerializeField] private float knockBackVelocity = 0.8f;
@@ -44,12 +60,15 @@ public class PlayerController : MonoBehaviour
     private bool tsubameGaeshi = false;
     private bool inMistfiner = false;
     private bool playerIsDead = false;
+    private bool canFinish = false;
+    private bool freezing = false;
     private int timer = 0;
     private int stopTimer = 0;
     private float movementVelocity = 2;
-    private float mistfinerVelocity = 6;
+    private float mistfinerVelocity = 4;
     private float duration = 0.3f;
     private float targetPosition;
+    private int deathCounts = 0;
     
     #endregion
 
@@ -58,15 +77,24 @@ public class PlayerController : MonoBehaviour
     private Animator animator = null;
     private SimpleAnimation simpleAnim = null;
     private int mistFinerDuration = 50;
-    
+    private int guardHash = Animator.StringToHash("isGuard");
+    private int dashHash = Animator.StringToHash("dashTrigger");
+    private int backStepHash = Animator.StringToHash("backStep");
+    private int swallowHash = Animator.StringToHash("swallowTrigger");
+    private int mistfinerHash = Animator.StringToHash("mistfinerTrigger");
+    private int finishHash = Animator.StringToHash("finishTrigger");
+    private int isBossHash = Animator.StringToHash("isBoss");
+    private int deadHash = Animator.StringToHash("deadTrigger");
+
     #endregion
 
+    private void Awake()
+    {
+        animator = gameObject.GetComponent<Animator>();
+    }
 
     void Start()
     {
-        animator = GetComponent<Animator>();
-        simpleAnim = GetComponent<SimpleAnimation>();
-        simpleAnim.wrapMode = WrapMode.Once;
         Instantiate(effectObject);
         effect = GameObject.FindGameObjectWithTag("Effect").GetComponent<Image>();
 
@@ -75,33 +103,46 @@ public class PlayerController : MonoBehaviour
             {
                 hit = true;
                 bool dead = !isGuarding && !isJustGuard && !inMistfiner && !tsubameGaeshi;
-                
+
                 if (dead)
                 {
                     playerIsDead = true;
                 }
 
-                if (inMistfiner)
+                if (inMistfiner && mistfinerPlusPlus)
                 {
-                    
+                    freezing = false;
                 }
                 
                 if (tsubameGaeshi)
                 {
-                    // 反射を使う
+                    x.GetComponent<BulletAttr>().Refrect();
+                    if (swallowBladePlusPlus)
+                    {
+                        freezing = false;
+                    }
                 }
                 
                 if (isJustGuard)
                 {
-                    StartCoroutine(JustGuardOnHit());
+                    isJustGuard = false;
                     StartCoroutine(JustGuardEffectController());
                 }
                 if (isGuarding)
                 {
                     StartCoroutine(GuardOnHit());
-                    targetPosition -= knockBackVelocity;
-                    //animator.SetTrigger(guardStop);
-                    simpleAnim.Play("GuardStop");
+                    if (x.CompareTag("RifleBullet"))
+                    {
+                        targetPosition -= rifleKnockBackVelocity;
+                    }
+
+                    if (x.CompareTag("Bullet"))
+                    {
+                        targetPosition -= knockBackVelocity;
+                    }
+                    
+                    animator.ResetTrigger("guardStop");
+                    animator.SetTrigger("guardStop");
                     StartCoroutine(GuardEffectController());
                 }
 
@@ -114,46 +155,52 @@ public class PlayerController : MonoBehaviour
         var tempVec = transform.position;
         var tempPosition = transform.position.x;
 
-        if (Input.GetButton("Guard") && !isGuardStop)
+        if (!freezing)
         {
-            isGuarding = true;
-            simpleAnim.CrossFade("Guard", 0.1f);
+            if (Input.GetButton("Guard") && !isGuardStop)
+            {
+                isGuarding = true;
+                animator.SetBool(guardHash, true);
+            }
+
+            if (Input.GetButtonUp("Guard") && !isGuardStop)
+            {
+                StartCoroutine(JustGuard());
+            }
+
+            if (Input.GetButtonDown("D-Right") && !isGuardStop && !isGuarding)
+            {
+                targetPosition = tempPosition + movementVelocity;
+                StartCoroutine(DashEffectController());
+                animator.ResetTrigger(dashHash);
+                animator.SetTrigger(dashHash);
+            }
+
+            if (Input.GetButtonDown("D-Left") && !isGuardStop && !isGuarding)
+            {
+                targetPosition = tempPosition - movementVelocity;
+                animator.ResetTrigger(backStepHash);
+                animator.SetTrigger(backStepHash);
+            }
+            
+            if (canSwallowBlade && Input.GetKeyDown(KeyCode.K))
+            {
+                StartCoroutine(SwallowBlade());
+            }
+
+            if (canMistfiner && Input.GetKeyDown(KeyCode.A))
+            {
+                StartCoroutine(Mistfiner());
+            }
+
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                animator.ResetTrigger(finishHash);
+                animator.SetTrigger(finishHash);
+            }
         }
 
-        if (Input.GetButtonUp("Guard") && !isGuardStop)
-        {
-            StartCoroutine(JustGuard());
-        }
-
-        if (Input.GetButtonDown("D-Right")&& !isGuardStop && !isGuarding)
-        {
-            targetPosition = tempPosition + movementVelocity;
-            StartCoroutine(DashEffectController());
-            simpleAnim.Play("Dash");
-        }
-
-        if (Input.GetButtonDown("D-Left") && !isGuardStop && !isGuarding)
-        {
-            targetPosition = tempPosition - movementVelocity;
-            simpleAnim.Play("BackStep");
-        }
-
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            TsubameGaeshi();
-        }
-
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            StartCoroutine(Mistfiner());
-        }
-
-        if (!simpleAnim.isPlaying)
-        {
-            simpleAnim.CrossFade("Default", 0.1f);
-        }
-
-        if (playerIsDead)
+        if (playerIsDead || Input.GetKeyDown(KeyCode.D))
         {
             OnDead();
         }
@@ -164,26 +211,58 @@ public class PlayerController : MonoBehaviour
 
     void OnDead()
     {
+        animator.ResetTrigger(deadHash);
+        animator.SetTrigger(deadHash);
+        targetPosition -= 1;
         Debug.Log("Player is Dead");
         // 死亡時のスキル取得処理
     }
 
-    void TsubameGaeshi()
+    IEnumerator SwallowBlade()
     {
+        effect.transform.position = Camera.main.WorldToScreenPoint(guardEffectPosition.transform.position);
+
+        freezing = true;
         tsubameGaeshi = true;
-        simpleAnim.Play("Swallow");
+        var tsubameDuration = 4;
+        if (swallowBladePlus)
+        {
+            tsubameDuration = 8;
+        }
+        animator.ResetTrigger(swallowHash);
+        animator.SetTrigger(swallowHash);
+        
+        for (int animTimer = 0; animTimer < 11; animTimer++)
+        {
+            if (animTimer > tsubameDuration)
+            {
+                tsubameGaeshi = false;
+            }
+            effect.sprite = swallowEffectSprites[10 - animTimer];
+            yield return null;
+        }
+
+        freezing = false;
+        effect.sprite = clearImage;
     }
 
     IEnumerator Mistfiner()
     {
-        inMistfiner = true;
-        simpleAnim.Play("Mistfiner");
+        freezing = true;
+        animator.ResetTrigger(mistfinerHash);
+        animator.SetTrigger(mistfinerHash);
         for (int animTimer = 0; animTimer < mistFinerDuration; animTimer++)
         {
             yield return null;
         }
 
+        inMistfiner = true;
+        if (mistfinerPlus)
+        {
+            mistfinerVelocity = 6;
+        }
         targetPosition = transform.position.x + mistfinerVelocity;
+        freezing = false;
     }
 
     IEnumerator JustGuardEffectController()
@@ -256,6 +335,11 @@ public class PlayerController : MonoBehaviour
         
         for (int animationTimer = 0; animationTimer < 12; animationTimer++)
         {
+            if (animationTimer > 2 && advancedDash)
+            {
+                isGuarding = true;
+            }
+            
             if (animationTimer < 12)
             {
                 effect.sprite = dashEffectSprites[3];
@@ -279,7 +363,8 @@ public class PlayerController : MonoBehaviour
             effectPosition.transform.position = tempVec;
             yield return null;
         }
-        
+
+        isGuarding = false;
         tempVec.x = transform.position.x;
         effectPosition.transform.position = tempVec;
         effect.sprite = clearImage;
@@ -289,20 +374,18 @@ public class PlayerController : MonoBehaviour
     {
         isGuarding = false;
         isJustGuard = true;
+        if (advancedGuard)
+        {
+            justGuardDuration = 10;
+        }
         for (timer = 0; timer < justGuardDuration; timer++)
         {
             yield return null;
         }
-
-        simpleAnim.CrossFade("Default", 0.1f);
-        // animator.SetBool(guard, false);
+        
+        animator.SetBool(guardHash, false);
+        justGuardDuration = 6;
         isJustGuard = false;
-    }
-
-    IEnumerator JustGuardOnHit()
-    {
-        isJustGuard = false;
-        yield break;
     }
 
     IEnumerator GuardOnHit()

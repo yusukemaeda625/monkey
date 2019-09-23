@@ -312,37 +312,11 @@
           <e p="SimpleAnimationComponent.asmdef" t="Include" />
           <e p="SimpleAnimationPlayable.cs" t="Include" />
           <e p="SimpleAnimationPlayable_States.cs" t="Include" />
-          <e p="Tests" t="Include">
-            <e p="AnimationProxy.cs" t="Include" />
-            <e p="IAnimation.cs" t="Include" />
-            <e p="PerformanceTests" t="Include">
-              <e p="ComplexWithTransition" t="Include">
-                <e p="SimpleAnimationTransitions.cs" t="Include" />
-              </e>
-              <e p="TestUI.cs" t="Include" />
-            </e>
-            <e p="PlaymodeTests" t="Include">
-              <e p="ComparativeTests" t="Include">
-                <e p="BaseConditionsTests.cs" t="Include" />
-                <e p="ClipManagementTests.cs" t="Include" />
-                <e p="ComparativeTestFixture.cs" t="Include" />
-                <e p="DifferencesTests.cs" t="Include" />
-                <e p="MiscTests.cs" t="Include" />
-                <e p="PlaybackTests.cs" t="Include" />
-                <e p="QueueTests.cs" t="Include" />
-                <e p="StateAccessTests.cs" t="Include" />
-              </e>
-              <e p="SimpleAnimationTests.cs" t="Include" />
-            </e>
-            <e p="SimpleAnimation-Tests.asmdef" t="Include" />
-            <e p="SimpleAnimationProxy.cs" t="Include" />
-          </e>
         </e>
       </e>
       <e p="Monkey.sln" t="IncludeFlat" />
       <e p="obj" t="ExcludeRecursive" />
       <e p="Packages" t="ExcludeRecursive" />
-      <e p="SimpleAnimation-Tests.csproj" t="IncludeRecursive" />
       <e p="SimpleAnimationComponent-Editor.csproj" t="IncludeRecursive" />
       <e p="SimpleAnimationComponent.csproj" t="IncludeRecursive" />
       <e p="Temp/bin" t="ExcludeRecursive" />
