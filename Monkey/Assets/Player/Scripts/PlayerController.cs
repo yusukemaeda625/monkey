@@ -6,6 +6,7 @@ using UniRx.Triggers;
 using UniRx;
 using UnityEngine.Experimental.Animations;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour
 {
@@ -39,8 +40,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Sprite[] guardEffectSprites = null;
     [SerializeField] private Sprite[] justGuardEffectSprites = null;
     [SerializeField] private Sprite[] swallowEffectSprites = null;
+    [SerializeField] private Sprite[] damageEffectSprites = null;
+    [SerializeField] private Sprite[] skillImages = null;
     [SerializeField] private Sprite clearImage = null;
     [SerializeField] private GameObject effectObject = null;
+    [SerializeField] private GameObject skillCanvas = null;
+    private GameObject canvas = null;
     private Image effect = null;
     
     #endregion
@@ -52,6 +57,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int chargeDuration = 10;
     [SerializeField] private float knockBackVelocity = 0.8f;
     [SerializeField] private float rifleKnockBackVelocity = 1f;
+    GameObject[] enemies = null;
     
     private bool isGuarding = false;
     private bool isJustGuard = false;
@@ -62,6 +68,8 @@ public class PlayerController : MonoBehaviour
     private bool playerIsDead = false;
     private bool canFinish = false;
     private bool freezing = false;
+    private bool inSkillSelect = false;
+    private bool finishBlow = false;
     private int timer = 0;
     private int stopTimer = 0;
     private float movementVelocity = 2;
@@ -77,17 +85,21 @@ public class PlayerController : MonoBehaviour
     private Animator animator = null;
     private SimpleAnimation simpleAnim = null;
     private int mistFinerDuration = 50;
+    private bool isBoss = true;
     private int guardHash = Animator.StringToHash("isGuard");
     private int dashHash = Animator.StringToHash("dashTrigger");
     private int backStepHash = Animator.StringToHash("backStep");
     private int swallowHash = Animator.StringToHash("swallowTrigger");
     private int mistfinerHash = Animator.StringToHash("mistfinerTrigger");
     private int finishHash = Animator.StringToHash("finishTrigger");
-    private int isBossHash = Animator.StringToHash("isBoss");
     private int deadHash = Animator.StringToHash("deadTrigger");
+    private int bossHash = Animator.StringToHash("bossTrigger");
+    private int mobHash = Animator.StringToHash("mobTrigger");
 
     #endregion
 
+    private bool skillSelectInit = false;
+    
     private void Awake()
     {
         animator = gameObject.GetComponent<Animator>();
@@ -97,6 +109,7 @@ public class PlayerController : MonoBehaviour
     {
         Instantiate(effectObject);
         effect = GameObject.FindGameObjectWithTag("Effect").GetComponent<Image>();
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
         this.OnTriggerEnterAsObservable()
             .Subscribe(x =>
@@ -107,6 +120,11 @@ public class PlayerController : MonoBehaviour
                 if (dead)
                 {
                     playerIsDead = true;
+                }
+
+                if (inMistfiner && x.CompareTag("Enemy"))
+                {
+                    StartCoroutine(NinjaExecution());
                 }
 
                 if (inMistfiner && mistfinerPlusPlus)
@@ -126,6 +144,7 @@ public class PlayerController : MonoBehaviour
                 if (isJustGuard)
                 {
                     isJustGuard = false;
+                    Destroy(x.gameObject);
                     StartCoroutine(JustGuardEffectController());
                 }
                 if (isGuarding)
@@ -144,9 +163,8 @@ public class PlayerController : MonoBehaviour
                     animator.ResetTrigger("guardStop");
                     animator.SetTrigger("guardStop");
                     StartCoroutine(GuardEffectController());
+                    Destroy(x.gameObject);
                 }
-
-                Destroy(x.gameObject);
             });
     }
 
@@ -154,6 +172,12 @@ public class PlayerController : MonoBehaviour
     {
         var tempVec = transform.position;
         var tempPosition = transform.position.x;
+        float[] distances = null;
+
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            distances[i] = Vector3.Distance(transform.position, enemies[i].transform.position);
+        }
 
         if (!freezing)
         {
@@ -195,27 +219,121 @@ public class PlayerController : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.F))
             {
-                animator.ResetTrigger(finishHash);
-                animator.SetTrigger(finishHash);
+                StartCoroutine(NinjaExecution());
             }
+
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                StartCoroutine(DamageEffect());
+            }
+        }
+
+        if (finishBlow)
+        {
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                Time.timeScale = 1;
+            }
+        }
+
+        if (inSkillSelect)
+        {
+            SkillSelector();
         }
 
         if (playerIsDead || Input.GetKeyDown(KeyCode.D))
         {
-            OnDead();
+            StartCoroutine(PlayerDead());
         }
 
         tempVec.x = Mathf.Lerp(tempPosition, targetPosition, duration);
         transform.position = tempVec;
     }
 
-    void OnDead()
+    void SkillSelector()
     {
+        Instantiate(skillCanvas);
+        var skillSprite = GameObject.FindGameObjectWithTag("SkillImage");
+        var image = skillSprite.GetComponent<Image>();
+        
+        if (deathCounts == 0)
+        {
+            canSwallowBlade = true;
+        }
+
+        if (deathCounts == 1)
+        {
+            canMistfiner = true;
+        }
+
+        image.sprite = skillImages[deathCounts];
+    }
+
+    IEnumerator NinjaExecution()
+    {
+        freezing = true;
+        
+        animator.ResetTrigger(finishHash);
+        animator.SetTrigger(finishHash);
+        
+        for (int i = 0; i < 120; i++)
+        {
+            if (i == 12)
+            {
+                finishBlow = true;
+                Time.timeScale = 0;
+            }
+
+            if (i == 14)
+            {
+                if (isBoss)
+                {
+                    animator.ResetTrigger(bossHash);
+                    animator.SetTrigger(bossHash);
+                }
+
+                if (!isBoss)
+                {
+                    animator.ResetTrigger(mobHash);
+                    animator.SetTrigger(mobHash);
+                }
+            }
+
+            yield return null;
+        }
+
+        freezing = false;
+    }
+
+    IEnumerator PlayerDead()
+    {
+        freezing = true;
+        
         animator.ResetTrigger(deadHash);
         animator.SetTrigger(deadHash);
-        targetPosition -= 1;
-        Debug.Log("Player is Dead");
-        // 死亡時のスキル取得処理
+        
+        for (int i = 0; i < 60; i++)
+        {
+            if (i < 31)
+            {
+                targetPosition -= 0.1f;
+            }
+
+            if (i == 31)
+            {
+                Time.timeScale = 0;
+                inSkillSelect = true;
+            }
+            
+            if (i > 31)
+            {
+                targetPosition -= 0.01f;
+            }
+            
+            yield return null;
+        }
+
+        freezing = false;
     }
 
     IEnumerator SwallowBlade()
@@ -370,6 +488,37 @@ public class PlayerController : MonoBehaviour
         effect.sprite = clearImage;
     }
 
+    IEnumerator DamageEffect()
+    {
+        effect.transform.position = Camera.main.WorldToScreenPoint(transform.position);
+
+        for (int i = 0; i < 5; i++)
+        {
+            if (i < 5)
+            {
+                effect.sprite = damageEffectSprites[3];
+            }
+
+            if (i < 3)
+            {
+                effect.sprite = damageEffectSprites[2];
+            }
+
+            if (i < 2)
+            {
+                effect.sprite = damageEffectSprites[1];
+            }
+
+            if (i < 1)
+            {
+                effect.sprite = damageEffectSprites[0];
+            }
+            yield return null;
+        }
+
+        effect.sprite = clearImage;
+    }
+
     IEnumerator JustGuard()
     {
         isGuarding = false;
@@ -405,5 +554,10 @@ public class PlayerController : MonoBehaviour
     public void KnockBackPlayer(float velocity)
     {
         targetPosition += velocity;
+    }
+
+    public bool GetGuardState()
+    {
+        return isGuarding || isJustGuard;
     }
 }
