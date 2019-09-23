@@ -39,5 +39,8 @@ public class BulletAttr : MonoBehaviour
                 ba.durable -= md;
             }
         }
+        if(col.tag == "Enemy" || col.tag == "Perry" || col.tag == "Player"){
+            Destroy(this.gameObject);
+        }
     }
 }
