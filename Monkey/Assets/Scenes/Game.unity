@@ -1139,21 +1139,65 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 5906611336040863518, guid: 6ce2e5e5fc12a4d4581f5df7503980f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5906611336252541741, guid: 6ce2e5e5fc12a4d4581f5df7503980f7,
         type: 3}
       propertyPath: m_TagString
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 5906611336252541741, guid: 6ce2e5e5fc12a4d4581f5df7503980f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5906611336529907980, guid: 6ce2e5e5fc12a4d4581f5df7503980f7,
         type: 3}
       propertyPath: m_TagString
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 5906611336529907980, guid: 6ce2e5e5fc12a4d4581f5df7503980f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5906611336710090346, guid: 6ce2e5e5fc12a4d4581f5df7503980f7,
         type: 3}
       propertyPath: m_TagString
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 5906611336710090347, guid: 6ce2e5e5fc12a4d4581f5df7503980f7,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 9.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 370487142257364681, guid: 6ce2e5e5fc12a4d4581f5df7503980f7,
+        type: 3}
+      propertyPath: rainCannonPrefab
+      value: 
+      objectReference: {fileID: 4823662078795897866, guid: b3814c31eacd640a3b33d6f0ec86ba01,
+        type: 3}
+    - target: {fileID: 370487142257364681, guid: 6ce2e5e5fc12a4d4581f5df7503980f7,
+        type: 3}
+      propertyPath: BigCannonPrefab
+      value: 
+      objectReference: {fileID: 3244961633233347890, guid: e78b69d8ca20340c786a4d14bf7fbbc4,
+        type: 3}
+    - target: {fileID: 370487142257364681, guid: 6ce2e5e5fc12a4d4581f5df7503980f7,
+        type: 3}
+      propertyPath: cannonPrefab
+      value: 
+      objectReference: {fileID: 4545776051050165765, guid: 436685b67ef80401ab394f250931cd67,
+        type: 3}
+    - target: {fileID: 370487142257364681, guid: 6ce2e5e5fc12a4d4581f5df7503980f7,
+        type: 3}
+      propertyPath: bulletPrefab
+      value: 
+      objectReference: {fileID: 7062717644514017744, guid: d5919a10379bb47b788dd16b46fed525,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ce2e5e5fc12a4d4581f5df7503980f7, type: 3}
 --- !u!1 &1867987955
