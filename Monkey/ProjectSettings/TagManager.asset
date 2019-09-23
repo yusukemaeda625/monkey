@@ -11,6 +11,7 @@ TagManager:
   - RifleBullet
   - Enemy
   - BigCannon
+  - SkillImage
   layers:
   - Default
   - TransparentFX
