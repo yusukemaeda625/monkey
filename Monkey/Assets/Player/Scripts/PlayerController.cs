@@ -22,9 +22,10 @@ public class PlayerController : MonoBehaviour
     #region SkillVariables
 
     private bool canSwallowBlade = true;
-    private bool swallowBladePlus = false;
-    private bool swallowBladePlusPlus = false;
+    private bool swallowBladePlus =  true;
+    private bool swallowBladePlusPlus = true;
     private bool canMistfiner = true;
+
     private bool mistfinerPlus = false;
     private bool mistfinerPlusPlus = false;
     private bool advancedDash = false;

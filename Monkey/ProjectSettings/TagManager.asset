@@ -4,14 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Guard
-  - CameraTarget
   - Bullet
-  - Effect
-  - RifleBullet
-  - Enemy
   - BigCannon
-  - SkillImage
   layers:
   - Default
   - TransparentFX
