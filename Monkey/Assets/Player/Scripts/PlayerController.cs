@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx.Triggers;
 using UniRx;
+using UnityEditorInternal;
 using UnityEngine.Experimental.Animations;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -73,7 +74,7 @@ public class PlayerController : MonoBehaviour
     private bool finishBlow = false;
     private int timer = 0;
     private int stopTimer = 0;
-    private float movementVelocity = 2;
+    private float movementVelocity = 3;
     private float mistfinerVelocity = 4;
     private float duration = 0.3f;
     private float targetPosition;
@@ -100,6 +101,7 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     private bool skillSelectInit = false;
+    private int enemySouls = 0;
     
     private void Awake()
     {
@@ -175,10 +177,15 @@ public class PlayerController : MonoBehaviour
         var tempPosition = transform.position.x;
         float[] distances = null;
 
-        for (int i = 0; i < enemies.Length; i++)
-        {
-            distances[i] = Vector3.Distance(transform.position, enemies[i].transform.position);
-        }
+//        for (int i = 0; i < enemies.Length; i++)
+//        {
+//            distances[i] = Vector3.Distance(transform.position, enemies[i].transform.position);
+//        }
+//
+//        if (Mathf.Min(distances) < 3)
+//        {
+//            canFinish = true;
+//        }
 
         if (!freezing)
         {
@@ -208,30 +215,30 @@ public class PlayerController : MonoBehaviour
                 animator.SetTrigger(backStepHash);
             }
             
-            if (canSwallowBlade && Input.GetKeyDown(KeyCode.K))
+            if (canSwallowBlade && Input.GetButtonDown("SwallowBlade"))
             {
                 StartCoroutine(SwallowBlade());
             }
 
-            if (canMistfiner && Input.GetKeyDown(KeyCode.A))
+            if (canMistfiner && Input.GetButtonDown("Mistfiner"))
             {
                 StartCoroutine(Mistfiner());
             }
 
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetButtonDown("Execution"))
             {
                 StartCoroutine(NinjaExecution());
             }
 
-            if (Input.GetKeyDown(KeyCode.B))
+            if (Input.GetButtonDown("SelfKillL") && Input.GetButtonDown("SelfKillR"))
             {
-                StartCoroutine(DamageEffect());
+                // 自殺
             }
         }
 
         if (finishBlow)
         {
-            if (Input.GetKeyDown(KeyCode.J))
+            if (Input.GetButtonDown("Execution"))
             {
                 Time.timeScale = 1;
             }
@@ -253,26 +260,65 @@ public class PlayerController : MonoBehaviour
 
     void SkillSelector()
     {
-        Instantiate(skillCanvas);
+        if (!skillSelectInit)
+        {
+            Instantiate(skillCanvas);
+            skillSelectInit = true;
+        }
         var skillSprite = GameObject.FindGameObjectWithTag("SkillImage");
         var image = skillSprite.GetComponent<Image>();
-        
-        if (deathCounts == 0)
+
+        switch (deathCounts)
         {
-            canSwallowBlade = true;
+            case 1:
+                canSwallowBlade = true;
+                image.sprite = skillImages[0];
+                break;
+            case 2:
+                canMistfiner = true;
+                image.sprite = skillImages[1];
+                break;
+            case 3:
+                advancedGuard = true;
+                image.sprite = skillImages[2];
+                break;
+            case 4:
+                swallowBladePlus = true;
+                image.sprite = skillImages[3];
+                break;
+            case 5:
+                mistfinerPlus = true;
+                image.sprite = skillImages[4];
+                break;
+            case 6:
+                advancedDash = true;
+                image.sprite = skillImages[5];
+                break;
+            case 7:
+                swallowBladePlusPlus = true;
+                image.sprite = skillImages[6];
+                break;
+            case 8:
+                mistfinerPlusPlus = true;
+                image.sprite = skillImages[7];
+                break;
+            default:
+                image.sprite = clearImage;
+                break;
         }
 
-        if (deathCounts == 1)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            canMistfiner = true;
+            Time.timeScale = 1;
+            inSkillSelect = false;
+            image.sprite = clearImage;
         }
-
-        image.sprite = skillImages[deathCounts];
     }
 
     IEnumerator NinjaExecution()
     {
         freezing = true;
+        enemySouls++;
         
         animator.ResetTrigger(finishHash);
         animator.SetTrigger(finishHash);
@@ -309,6 +355,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator PlayerDead()
     {
         freezing = true;
+        deathCounts++;
         
         animator.ResetTrigger(deadHash);
         animator.SetTrigger(deadHash);
