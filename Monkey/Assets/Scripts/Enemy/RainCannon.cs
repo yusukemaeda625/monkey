@@ -32,7 +32,7 @@ public class RainCannon : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider col){
-        if(col.tag != "Enemy" && col.tag != "Bullet"){
+        if(col.tag != "Perry" && col.tag != "Bullet"){
             Destroy(this.gameObject);
         }
     }
