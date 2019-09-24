@@ -15,9 +15,6 @@ public class GameSceneManager : MonoBehaviour
     private float bloomParam = 0f;
     private bool isOpenedDark = false;
     private float blspeed = 1f;
-
-    private GameObject perryWall;
-
     private GameObject perry;
     void Start()
     {
@@ -25,8 +22,7 @@ public class GameSceneManager : MonoBehaviour
         canvas.GetComponent<Fade>().FadeIn();             
         //defaultSkyBoxMaterial = RenderSettings.skybox;
         blackMat = new Material(Shader.Find("Unlit/black"));
-        perry = GameObject.Find("Perry");
-        perryWall = GameObject.Find("BattleWall");
+        perry = GameObject.Find("BossPerry");        
     }
     
     void Update()
@@ -36,8 +32,11 @@ public class GameSceneManager : MonoBehaviour
                 bloomParam += blspeed * Time.deltaTime;
                 bloomMat.SetFloat("_Bloom",bloomParam);
             }
+        }        
+
+        if(perry.GetComponent<PerryController>().isDead){
+            Invoke("ToResultScene",3f);
         }
-        perryWall.GetComponent<BoxCollider>().enabled = perry.GetComponent<PerryController>().isBattle;
     }
 
     public void GameOver(){
@@ -83,7 +82,7 @@ public class GameSceneManager : MonoBehaviour
             if(obj.activeInHierarchy){
                 var r = obj.GetComponent<Renderer>();
                 if(r != null){
-                    if(obj.tag == "Player" || obj.tag == "Enemy"){
+                    if(obj.tag == "Player" || obj.tag == "Enemy" || obj.tag == "Perry"){
                         foreach(var m in r.materials){         
                             if(!changedMaterials.Contains(m)){                
                                 changedMaterials.Add(m);
@@ -97,6 +96,34 @@ public class GameSceneManager : MonoBehaviour
                                 changedMaterials.Add(m);
                                 dictionaryMaterialShader.Add(m,m.shader);
                                 m.shader = Shader.Find("Unlit/white");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    //赤黒シーン
+        public void ChangeSceneMatsBKRED(){
+        //RenderSettings.skybox = blackMat;
+        foreach(GameObject obj in UnityEngine.Object.FindObjectsOfType(typeof(GameObject))){
+            if(obj.activeInHierarchy){
+                var r = obj.GetComponent<Renderer>();
+                if(r != null){
+                    if(obj.tag == "Player" || obj.tag == "Enemy" || obj.tag == "Perry"){
+                        foreach(var m in r.materials){         
+                            if(!changedMaterials.Contains(m)){                
+                                changedMaterials.Add(m);
+                                dictionaryMaterialShader.Add(m,m.shader);
+                               m.shader = Shader.Find("Unlit/red");
+                            }
+                        }
+                    }else{
+                        foreach(var m in r.materials){
+                            if(!changedMaterials.Contains(m)){
+                                changedMaterials.Add(m);
+                                dictionaryMaterialShader.Add(m,m.shader);
+                                m.shader = Shader.Find("Unlit/black");
                             }
                         }
                     }

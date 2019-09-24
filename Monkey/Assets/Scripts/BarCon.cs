@@ -17,6 +17,8 @@ public class BarCon : MonoBehaviour
     [SerializeField] Sprite candle2;
     [SerializeField] Sprite candle3;
 
+
+    [SerializeField] List<Sprite> nFont;
     private float remainingTime;
     // Start is called before the first frame update
     void Start()
@@ -33,9 +35,10 @@ public class BarCon : MonoBehaviour
         if(scaleParam >= 0f && scaleParam <= 1f){
             var tr = lifeTimeBar.GetComponent<RectTransform>();            
             tr.localScale = new Vector2(scaleParam,1f);          
-            TimeText.GetComponent<Text>().text = remainingTime.ToString("F2");            
+            var t = (int)remainingTime;
+            TimeText.GetComponent<Text>().text = t.ToString();            
         }else{
-            TimeText.GetComponent<Text>().text = "0.00";
+            TimeText.GetComponent<Text>().text = "0";
         }
 
 

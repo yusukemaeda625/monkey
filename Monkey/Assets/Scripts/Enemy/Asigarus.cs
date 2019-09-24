@@ -9,12 +9,14 @@ public class Asigarus : MonoBehaviour
         Asigaru_B,
         Asigaru_C
     }
-
     [SerializeField] AsigaruType myType;
 
     private float myTimer = 0f;
     public GameObject bulletPrefab;
     public GameObject rifleBulletPrefab;
+
+    private bool isDead = false;
+    [SerializeField] Vector3 shotPos = Vector3.zero;
 
     [SerializeField] float fireRate = 0.15f;
     public float interval = 1.5f;
@@ -22,6 +24,8 @@ public class Asigarus : MonoBehaviour
     public float shotField = 12f;
 
     private GameObject player;
+
+    private float killDistance = 3f;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,9 +35,12 @@ public class Asigarus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(isDead)
+            return;
+            
         var ve = player.transform.position - this.transform.position;
         
-        if(ve.magnitude > shotField){
+        if(ve.magnitude > shotField || ve.magnitude <= killDistance){
             return;
         }
         myTimer += Time.deltaTime;
@@ -47,7 +54,9 @@ public class Asigarus : MonoBehaviour
             case AsigaruType.Asigaru_B :
             {
                 float t = 0f;
-                for(int i = 0; i < 3; i++){
+                for(int i = 0; i < 2; i++){
+                    if(isDead)
+                        break;
                     Invoke("ShotNormalBullet",t);
                     t += fireRate;
                 }
@@ -55,9 +64,11 @@ public class Asigarus : MonoBehaviour
             break;
             case AsigaruType.Asigaru_C :
             {
-                float t = 0.3f;
+                float t = 0.7f;
                 ShotRifleBullet();
                 for(int i = 0; i < 3; i++){
+                    if(isDead)
+                        break;
                     Invoke("ShotNormalBullet",t);
                     t += fireRate;
                 }
@@ -68,11 +79,17 @@ public class Asigarus : MonoBehaviour
         }
     }
 
-    void ShotNormalBullet(){
-        Instantiate(bulletPrefab, transform.position, Quaternion.identity);     
+    void ShotNormalBullet(){        
+        Instantiate(bulletPrefab, transform.position + shotPos, Quaternion.identity);             
+        GetComponent<Animator>().SetTrigger("Shot");
     }
 
     void ShotRifleBullet(){
-        Instantiate(rifleBulletPrefab, transform.position, Quaternion.identity);     
+        Instantiate(rifleBulletPrefab, transform.position + shotPos, Quaternion.identity);     
+    }
+
+    public void Deth(){
+        GetComponent<Animator>().SetBool("Dead",true);
+        isDead = true;
     }
 }

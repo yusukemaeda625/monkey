@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx.Triggers;
 using UniRx;
-using UnityEditorInternal;
 using UnityEngine.Experimental.Animations;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -14,9 +13,10 @@ public class PlayerController : MonoBehaviour
     #region SkillVariables
 
     private bool canSwallowBlade = true;
-    private bool swallowBladePlus = false;
-    private bool swallowBladePlusPlus = false;
+    private bool swallowBladePlus =  true;
+    private bool swallowBladePlusPlus = true;
     private bool canMistfiner = true;
+
     private bool mistfinerPlus = false;
     private bool mistfinerPlusPlus = false;
     private bool advancedDash = false;
@@ -112,9 +112,17 @@ public class PlayerController : MonoBehaviour
                 hit = true;
                 bool dead = !isGuarding && !isJustGuard && !inMistfiner && !tsubameGaeshi;
 
+<<<<<<< HEAD
                 if (dead && (x.CompareTag("Bullet") || x.CompareTag("RifleBullet")))
                 {
                     playerIsDead = true;
+=======
+                if (dead)
+                {   
+                    if(!x.CompareTag("Perry")){
+                        playerIsDead = true;    
+                    }                                        
+>>>>>>> d05fe418bcd285a631ec3754d7978fd066d6cc14
                 }
 
                 if (inMistfiner && x.CompareTag("Enemy"))
@@ -332,6 +340,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (isBoss)
                 {
+                    GameObject.Find("BossPerry").GetComponent<PerryController>().Damage();
                     animator.ResetTrigger(bossHash);
                     animator.SetTrigger(bossHash);
                 }
