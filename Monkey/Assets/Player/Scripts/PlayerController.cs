@@ -10,14 +10,6 @@ using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour
 {
-    enum AnimationStates
-    {
-        Idle,
-        Dash,
-        BackStep,
-        Guard
-    }
-    
     #region SkillVariables
 
     private bool canSwallowBlade = true;
@@ -58,7 +50,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int chargeDuration = 10;
     [SerializeField] private float knockBackVelocity = 0.8f;
     [SerializeField] private float rifleKnockBackVelocity = 1f;
-    GameObject[] enemies = null;
+    private GameObject[] enemies = null;
+    private GameObject perry = null;
     
     private bool isGuarding = false;
     private bool isJustGuard = false;
@@ -88,6 +81,7 @@ public class PlayerController : MonoBehaviour
     private int mistFinerDuration = 50;
     private bool isBoss = true;
     private int guardHash = Animator.StringToHash("isGuard");
+    private int guardStopHash = Animator.StringToHash("guardStop");
     private int dashHash = Animator.StringToHash("dashTrigger");
     private int backStepHash = Animator.StringToHash("backStep");
     private int swallowHash = Animator.StringToHash("swallowTrigger");
@@ -104,6 +98,8 @@ public class PlayerController : MonoBehaviour
     
     private void Awake()
     {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
         animator = gameObject.GetComponent<Animator>();
     }
 
@@ -112,6 +108,7 @@ public class PlayerController : MonoBehaviour
         Instantiate(effectObject);
         effect = GameObject.FindGameObjectWithTag("Effect").GetComponent<Image>();
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        perry = GameObject.FindGameObjectWithTag("Perry");
 
         this.OnTriggerEnterAsObservable()
             .Subscribe(x =>
@@ -119,55 +116,62 @@ public class PlayerController : MonoBehaviour
                 hit = true;
                 bool dead = !isGuarding && !isJustGuard && !inMistfiner && !tsubameGaeshi;
 
+                if (dead && (x.CompareTag("Bullet") || x.CompareTag("RifleBullet")))
+                {
+                    playerIsDead = true;
+                }
+
                 if (dead)
-                {   
-                    if(!x.CompareTag("Perry")){
-                        playerIsDead = true;    
-                    }                                        
+                {
+                        if (!x.CompareTag("Perry"))
+                        {
+                            playerIsDead = true;
+                        }
                 }
 
                 if (inMistfiner && x.CompareTag("Enemy"))
                 {
-                    StartCoroutine(NinjaExecution());
+                        StartCoroutine(NinjaExecution());
                 }
 
                 if (inMistfiner && mistfinerPlusPlus)
                 {
-                    freezing = false;
+                        freezing = false;
                 }
-                
+
                 if (tsubameGaeshi)
                 {
-                    x.GetComponent<BulletAttr>().Refrect();
-                    if (swallowBladePlusPlus)
-                    {
-                        freezing = false;
-                    }
+                        x.GetComponent<BulletAttr>().Refrect();
+                        if (swallowBladePlusPlus)
+                        {
+                            freezing = false;
+                        }
                 }
-                
+
                 if (isJustGuard)
                 {
-                    isJustGuard = false;
-                    Destroy(x.gameObject);
-                    StartCoroutine(JustGuardEffectController());
+                        isJustGuard = false;
+                        Destroy(x.gameObject);
+                        StartCoroutine(JustGuardEffectController());
                 }
+
                 if (isGuarding)
                 {
-                    StartCoroutine(GuardOnHit());
-                    if (x.CompareTag("RifleBullet"))
-                    {
-                        targetPosition -= rifleKnockBackVelocity;
-                    }
+                        StartCoroutine(GuardOnHit());
+                        if (x.CompareTag("RifleBullet"))
+                        {
+                            targetPosition -= rifleKnockBackVelocity;
+                        }
 
-                    if (x.CompareTag("Bullet"))
-                    {
-                        targetPosition -= knockBackVelocity;
-                    }
-                    
-                    animator.ResetTrigger("guardStop");
-                    animator.SetTrigger("guardStop");
-                    StartCoroutine(GuardEffectController());
-                    Destroy(x.gameObject);
+                        if (x.CompareTag("Bullet"))
+                        {
+                            targetPosition -= knockBackVelocity;
+                        }
+
+                        animator.ResetTrigger(guardStopHash);
+                        animator.SetTrigger(guardStopHash);
+                        StartCoroutine(GuardEffectController()); 
+                        Destroy(x.gameObject);
                 }
             });
     }
@@ -205,6 +209,7 @@ public class PlayerController : MonoBehaviour
             {
                 targetPosition = tempPosition + movementVelocity;
                 StartCoroutine(DashEffectController());
+                animator.SetBool(guardHash, false);
                 animator.ResetTrigger(dashHash);
                 animator.SetTrigger(dashHash);
             }
@@ -212,6 +217,7 @@ public class PlayerController : MonoBehaviour
             if (Input.GetButtonDown("D-Left") && !isGuardStop && !isGuarding)
             {
                 targetPosition = tempPosition - movementVelocity;
+                animator.SetBool(guardHash, false);
                 animator.ResetTrigger(backStepHash);
                 animator.SetTrigger(backStepHash);
             }
@@ -226,14 +232,19 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(Mistfiner());
             }
 
-            if (Input.GetButtonDown("Execution"))
+            if (Input.GetButtonDown("Execution") && canFinish)
             {
                 StartCoroutine(NinjaExecution());
             }
 
             if (Input.GetButtonDown("SelfKillL") && Input.GetButtonDown("SelfKillR"))
             {
-                // 自殺
+                StartCoroutine(SelfKill());
+            }
+
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                StartCoroutine(SelfKill());
             }
         }
 
@@ -250,7 +261,7 @@ public class PlayerController : MonoBehaviour
             SkillSelector();
         }
 
-        if (playerIsDead || Input.GetKeyDown(KeyCode.D))
+        if (playerIsDead)
         {
             StartCoroutine(PlayerDead());
         }
@@ -336,7 +347,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (isBoss)
                 {
-                    GameObject.Find("BossPerry").GetComponent<PerryController>().Damage();
+                    perry.GetComponent<PerryController>().Damage();
                     animator.ResetTrigger(bossHash);
                     animator.SetTrigger(bossHash);
                 }
@@ -354,6 +365,25 @@ public class PlayerController : MonoBehaviour
         freezing = false;
     }
 
+    IEnumerator SelfKill()
+    {
+        freezing = true;
+        deathCounts++;
+        
+        for (int i = 0; i < 30; i++)
+        {
+            if (i == 15)
+            {
+                Time.timeScale = 0f;
+                inSkillSelect = true;
+            }
+
+            yield return null;
+        }
+
+        freezing = false;
+    }
+    
     IEnumerator PlayerDead()
     {
         freezing = true;
@@ -392,7 +422,7 @@ public class PlayerController : MonoBehaviour
 
         freezing = true;
         tsubameGaeshi = true;
-        var tsubameDuration = 4;
+        var tsubameDuration = 3;
         if (swallowBladePlus)
         {
             tsubameDuration = 8;
