@@ -25,10 +25,7 @@ public class RainCannon : MonoBehaviour
         GetComponent<Rigidbody>().AddForce(force);
     }
 
-    void OnDestroy(){        
-        AudioSource.PlayClipAtPoint( explSE.clip, transform.position);
-
-        explSE.PlayOneShot(explSE.clip);
+    void OnDestroy(){                    
     }
 
     // Update is called once per frame
@@ -38,7 +35,8 @@ public class RainCannon : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider col){
-        if(col.tag != "Perry" && col.tag != "Bullet"){            
+        if(col.tag != "Perry" && col.tag != "Bullet"){     
+            AudioSource.PlayClipAtPoint( explSE.clip, transform.position);           
             Destroy(this.gameObject);
         }
     }

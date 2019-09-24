@@ -69,6 +69,7 @@ public class PerryController : MonoBehaviour
         if(isStan){
             Debug.Log("Stan Now");
             if(hp != oldHp){
+                GetComponent<Animator>().SetBool("Oko",true);
                 isStan = false;
                 oldHp = hp;
                 Kick();
