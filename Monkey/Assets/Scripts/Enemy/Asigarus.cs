@@ -54,7 +54,9 @@ public class Asigarus : MonoBehaviour
             case AsigaruType.Asigaru_B :
             {
                 float t = 0f;
-                for(int i = 0; i < 3; i++){
+                for(int i = 0; i < 2; i++){
+                    if(isDead)
+                        break;
                     Invoke("ShotNormalBullet",t);
                     t += fireRate;
                 }
@@ -62,9 +64,11 @@ public class Asigarus : MonoBehaviour
             break;
             case AsigaruType.Asigaru_C :
             {
-                float t = 0.3f;
+                float t = 0.7f;
                 ShotRifleBullet();
                 for(int i = 0; i < 3; i++){
+                    if(isDead)
+                        break;
                     Invoke("ShotNormalBullet",t);
                     t += fireRate;
                 }

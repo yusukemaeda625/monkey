@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx.Triggers;
 using UniRx;
-using UnityEditorInternal;
 using UnityEngine.Experimental.Animations;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -51,7 +50,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int chargeDuration = 10;
     [SerializeField] private float knockBackVelocity = 0.8f;
     [SerializeField] private float rifleKnockBackVelocity = 1f;
-    GameObject[] enemies = null;
+    private GameObject[] enemies = null;
+    private GameObject perry = null;
     
     private bool isGuarding = false;
     private bool isJustGuard = false;
@@ -98,6 +98,8 @@ public class PlayerController : MonoBehaviour
     
     private void Awake()
     {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
         animator = gameObject.GetComponent<Animator>();
     }
 
@@ -106,6 +108,7 @@ public class PlayerController : MonoBehaviour
         Instantiate(effectObject);
         effect = GameObject.FindGameObjectWithTag("Effect").GetComponent<Image>();
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        perry = GameObject.FindGameObjectWithTag("Perry");
 
         this.OnTriggerEnterAsObservable()
             .Subscribe(x =>
@@ -118,48 +121,57 @@ public class PlayerController : MonoBehaviour
                     playerIsDead = true;
                 }
 
+                if (dead)
+                {
+                        if (!x.CompareTag("Perry"))
+                        {
+                            playerIsDead = true;
+                        }
+                }
+
                 if (inMistfiner && x.CompareTag("Enemy"))
                 {
-                    StartCoroutine(NinjaExecution());
+                        StartCoroutine(NinjaExecution());
                 }
 
                 if (inMistfiner && mistfinerPlusPlus)
                 {
-                    freezing = false;
+                        freezing = false;
                 }
-                
+
                 if (tsubameGaeshi)
                 {
-                    x.GetComponent<BulletAttr>().Refrect();
-                    if (swallowBladePlusPlus)
-                    {
-                        freezing = false;
-                    }
+                        x.GetComponent<BulletAttr>().Refrect();
+                        if (swallowBladePlusPlus)
+                        {
+                            freezing = false;
+                        }
                 }
-                
+
                 if (isJustGuard)
                 {
-                    isJustGuard = false;
-                    Destroy(x.gameObject);
-                    StartCoroutine(JustGuardEffectController());
+                        isJustGuard = false;
+                        Destroy(x.gameObject);
+                        StartCoroutine(JustGuardEffectController());
                 }
+
                 if (isGuarding)
                 {
-                    StartCoroutine(GuardOnHit());
-                    if (x.CompareTag("RifleBullet"))
-                    {
-                        targetPosition -= rifleKnockBackVelocity;
-                    }
+                        StartCoroutine(GuardOnHit());
+                        if (x.CompareTag("RifleBullet"))
+                        {
+                            targetPosition -= rifleKnockBackVelocity;
+                        }
 
-                    if (x.CompareTag("Bullet"))
-                    {
-                        targetPosition -= knockBackVelocity;
-                    }
-                    
-                    animator.ResetTrigger(guardStopHash);
-                    animator.SetTrigger(guardStopHash);
-                    StartCoroutine(GuardEffectController());
-                    Destroy(x.gameObject);
+                        if (x.CompareTag("Bullet"))
+                        {
+                            targetPosition -= knockBackVelocity;
+                        }
+
+                        animator.ResetTrigger(guardStopHash);
+                        animator.SetTrigger(guardStopHash);
+                        StartCoroutine(GuardEffectController()); 
+                        Destroy(x.gameObject);
                 }
             });
     }
@@ -197,6 +209,7 @@ public class PlayerController : MonoBehaviour
             {
                 targetPosition = tempPosition + movementVelocity;
                 StartCoroutine(DashEffectController());
+                animator.SetBool(guardHash, false);
                 animator.ResetTrigger(dashHash);
                 animator.SetTrigger(dashHash);
             }
@@ -204,6 +217,7 @@ public class PlayerController : MonoBehaviour
             if (Input.GetButtonDown("D-Left") && !isGuardStop && !isGuarding)
             {
                 targetPosition = tempPosition - movementVelocity;
+                animator.SetBool(guardHash, false);
                 animator.ResetTrigger(backStepHash);
                 animator.SetTrigger(backStepHash);
             }
@@ -218,7 +232,7 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(Mistfiner());
             }
 
-            if (Input.GetButtonDown("Execution"))
+            if (Input.GetButtonDown("Execution") && canFinish)
             {
                 StartCoroutine(NinjaExecution());
             }
@@ -333,6 +347,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (isBoss)
                 {
+                    perry.GetComponent<PerryController>().Damage();
                     animator.ResetTrigger(bossHash);
                     animator.SetTrigger(bossHash);
                 }

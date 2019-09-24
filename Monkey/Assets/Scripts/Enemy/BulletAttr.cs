@@ -26,7 +26,7 @@ public class BulletAttr : MonoBehaviour
     public void Refrect(){
         GetComponent<Rigidbody>().velocity = new Vector3(0,0,0);
         GetComponent<Rigidbody>().angularVelocity =  new Vector3(0,0,0);
-        speed = Mathf.Abs(speed);
+        speed = Mathf.Abs(speed * 2);
         yspeed = 0f;
     }
 
@@ -38,6 +38,14 @@ public class BulletAttr : MonoBehaviour
                 durable -= ba.durable;                                
                 ba.durable -= md;
             }
+        }
+        if(col.tag == "Enemy"){
+            col.gameObject.GetComponent<Asigarus>().Deth();
+            col.gameObject.GetComponent<BoxCollider>().enabled = false;            
+            Destroy(this.gameObject);
+        }
+        if(col.tag == "Perry"){
+            Destroy(this.gameObject);
         }
     }
 }
