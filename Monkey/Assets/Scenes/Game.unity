@@ -4035,7 +4035,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 6184e12271f264555ac28f9b4a813e00,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: 6184e12271f264555ac28f9b4a813e00,
         type: 3}
@@ -9990,7 +9990,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 6184e12271f264555ac28f9b4a813e00,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: 6184e12271f264555ac28f9b4a813e00,
         type: 3}
@@ -10723,6 +10723,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effectPosition: {fileID: 1054903433}
   guardEffectPosition: {fileID: 388004208}
+  mistfinerEffectPos: {fileID: 0}
+  assistCanvas: {fileID: 0}
   dashEffectSprites:
   - {fileID: 21300000, guid: 20c6edd3c1de4409fb5ad6b44b7e4a77, type: 3}
   - {fileID: 21300000, guid: 6d1c5ab6ef83646a0a41e7f21aa0fbe2, type: 3}
@@ -10755,6 +10757,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 03c138ac59881476cafc028bd88f1e62, type: 3}
   - {fileID: 21300000, guid: 78c91b8ce6c2e4007ad124ecfcf8b1ef, type: 3}
   - {fileID: 21300000, guid: 211996d6f5a2045079aef1d1ea4823e4, type: 3}
+  mistfinerEffectSprites: []
   skillImages:
   - {fileID: 21300000, guid: dee131c4e53db40d2825d126358e2ec7, type: 3}
   - {fileID: 21300000, guid: 267de789ef77c42f688632276e38c108, type: 3}
@@ -12520,7 +12523,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 6184e12271f264555ac28f9b4a813e00,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: 6184e12271f264555ac28f9b4a813e00,
         type: 3}

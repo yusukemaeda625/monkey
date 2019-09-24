@@ -16,9 +16,6 @@ public class BulletAttr : MonoBehaviour
         rigidbody.sleepThreshold = -1;
     }
 
-    void OnDestroy(){        
-        AudioSource.PlayClipAtPoint( explotionSE.clip, transform.position);        
-    }
 
     // Update is called once per frame
     void Update()
