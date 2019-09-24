@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 using UniRx.Triggers;
 using UniRx;
-using UnityEngine.Experimental.Animations;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,7 +12,6 @@ public class PlayerController : MonoBehaviour
     private bool swallowBladePlus =  true;
     private bool swallowBladePlusPlus = true;
     private bool canMistfiner = true;
-
     private bool mistfinerPlus = false;
     private bool mistfinerPlusPlus = false;
     private bool advancedDash = false;
@@ -29,11 +24,14 @@ public class PlayerController : MonoBehaviour
     
     [SerializeField] private GameObject effectPosition = null;
     [SerializeField] private GameObject guardEffectPosition = null;
+    [SerializeField] private GameObject mistfinerEffectPos = null;
+    [SerializeField] private GameObject assistCanvas = null;
     [SerializeField] private Sprite[] dashEffectSprites = null;
     [SerializeField] private Sprite[] guardEffectSprites = null;
     [SerializeField] private Sprite[] justGuardEffectSprites = null;
     [SerializeField] private Sprite[] swallowEffectSprites = null;
     [SerializeField] private Sprite[] damageEffectSprites = null;
+    [SerializeField] private Sprite[] mistfinerEffectSprites = null;
     [SerializeField] private Sprite[] skillImages = null;
     [SerializeField] private Sprite clearImage = null;
     [SerializeField] private GameObject effectObject = null;
@@ -123,36 +121,40 @@ public class PlayerController : MonoBehaviour
 
                 if (dead)
                 {
-                        if (!x.CompareTag("Perry"))
-                        {
-                            playerIsDead = true;
-                        }
+                    if (!x.CompareTag("Perry"))
+                    {
+                        playerIsDead = true;
+                    }
                 }
 
                 if (inMistfiner && x.CompareTag("Enemy"))
                 {
-                        StartCoroutine(NinjaExecution());
+                    StartCoroutine(NinjaExecution(x.gameObject));
                 }
 
                 if (inMistfiner && mistfinerPlusPlus)
                 {
-                        freezing = false;
+                    freezing = false;
                 }
 
                 if (tsubameGaeshi)
                 {
-                        x.GetComponent<BulletAttr>().Refrect();
-                        if (swallowBladePlusPlus)
-                        {
-                            freezing = false;
-                        }
+                    x.GetComponent<BulletAttr>().Refrect();
+                    if (swallowBladePlusPlus)
+                    {
+                        freezing = false;
+                    }
                 }
 
                 if (isJustGuard)
                 {
-                        isJustGuard = false;
+                    isJustGuard = false;
+                    if (x.CompareTag("RifleBullet") || x.CompareTag("Bullet"))
+                    {
                         Destroy(x.gameObject);
-                        StartCoroutine(JustGuardEffectController());
+                    }
+
+                    StartCoroutine(JustGuardEffectController());
                 }
 
                 if (isGuarding)
@@ -161,17 +163,18 @@ public class PlayerController : MonoBehaviour
                         if (x.CompareTag("RifleBullet"))
                         {
                             targetPosition -= rifleKnockBackVelocity;
+                            Destroy(x.gameObject);
                         }
 
                         if (x.CompareTag("Bullet"))
                         {
                             targetPosition -= knockBackVelocity;
+                            Destroy(x.gameObject);
                         }
 
                         animator.ResetTrigger(guardStopHash);
                         animator.SetTrigger(guardStopHash);
-                        StartCoroutine(GuardEffectController()); 
-                        Destroy(x.gameObject);
+                        StartCoroutine(GuardEffectController());
                 }
             });
     }
@@ -180,17 +183,21 @@ public class PlayerController : MonoBehaviour
     {
         var tempVec = transform.position;
         var tempPosition = transform.position.x;
-        float[] distances = null;
+        float distance = 0f;
+        float distToPerry = 0f;
+        int enemyIndex = 0;
 
-//        for (int i = 0; i < enemies.Length; i++)
-//        {
-//            distances[i] = Vector3.Distance(transform.position, enemies[i].transform.position);
-//        }
-//
-//        if (Mathf.Min(distances) < 3)
-//        {
-//            canFinish = true;
-//        }
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            var tempDis = Vector3.Distance(transform.position, enemies[i].transform.position);
+            if (distance < tempDis)
+            {
+                distance = tempDis;
+                enemyIndex = i;
+            }
+        }
+
+        distToPerry = Vector3.Distance(transform.position, perry.transform.position);
 
         if (!freezing)
         {
@@ -230,11 +237,20 @@ public class PlayerController : MonoBehaviour
             if (canMistfiner && Input.GetButtonDown("Mistfiner"))
             {
                 StartCoroutine(Mistfiner());
+                StartCoroutine(MistfinerEffect());
             }
 
             if (Input.GetButtonDown("Execution") && canFinish)
             {
-                StartCoroutine(NinjaExecution());
+                if (isBoss)
+                {
+                    StartCoroutine(NinjaExecution(enemies[enemyIndex]));
+                }
+
+                if (!isBoss)
+                {
+                    StartCoroutine(NinjaExecution(perry));
+                }
             }
 
             if (Input.GetButtonDown("SelfKillL") && Input.GetButtonDown("SelfKillR"))
@@ -246,6 +262,18 @@ public class PlayerController : MonoBehaviour
             {
                 StartCoroutine(SelfKill());
             }
+        }
+
+        if (distance < 3)
+        {
+            canFinish = true;
+            isBoss = false;
+        }
+
+        if (distToPerry < 3)
+        {
+            canFinish = true;
+            isBoss = true;
         }
 
         if (finishBlow)
@@ -327,10 +355,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    IEnumerator NinjaExecution()
+    IEnumerator NinjaExecution(GameObject enemy)
     {
         freezing = true;
         enemySouls++;
+        targetPosition = enemy.transform.position.x - 1.5f;
+        var assistImage = Instantiate(assistCanvas).GetComponentInChildren<Image>();
+        var tempPos = Camera.main.WorldToScreenPoint(enemy.transform.position);
+        tempPos.y += 200f;
+        assistImage.transform.position = tempPos;
         
         animator.ResetTrigger(finishHash);
         animator.SetTrigger(finishHash);
@@ -461,6 +494,140 @@ public class PlayerController : MonoBehaviour
         }
         targetPosition = transform.position.x + mistfinerVelocity;
         freezing = false;
+    }
+
+    IEnumerator MistfinerEffect()
+    {
+        effect.transform.position = Camera.main.WorldToScreenPoint(mistfinerEffectPos.transform.position);
+        
+        for (int i = 0; i < 51; i++)
+        {
+            effect.transform.position = Camera.main.WorldToScreenPoint(mistfinerEffectPos.transform.position);
+
+            if (i < 51)
+            {
+                effect.sprite = mistfinerEffectSprites[23];
+            }
+
+            if (i < 50)
+            {
+                effect.sprite = mistfinerEffectSprites[22];
+            }
+
+            if (i < 49)
+            {
+                effect.sprite = mistfinerEffectSprites[21];
+            }
+
+            if (i < 48)
+            {
+                effect.sprite = mistfinerEffectSprites[20];
+            }
+
+            if (i < 47)
+            {
+                effect.sprite = mistfinerEffectSprites[19];
+            }
+            
+            if (i < 45)
+            {
+                effect.sprite = mistfinerEffectSprites[18];
+            }
+            
+            if (i < 43)
+            {
+                effect.sprite = mistfinerEffectSprites[17];
+            }
+            
+            if (i < 41)
+            {
+                effect.sprite = mistfinerEffectSprites[16];
+            }
+
+            if (i < 38)
+            {
+                effect.sprite = mistfinerEffectSprites[15];
+            }
+            
+            if (i < 36)
+            {
+                effect.sprite = mistfinerEffectSprites[14];
+            }
+
+            if (i < 33)
+            {
+                effect.sprite = mistfinerEffectSprites[13];
+            }
+            
+            if (i < 31)
+            {
+                effect.sprite = mistfinerEffectSprites[12];
+            }
+            
+            if (i < 28)
+            {
+                effect.sprite = mistfinerEffectSprites[11];
+            }
+            
+            if (i < 26)
+            {
+                effect.sprite = mistfinerEffectSprites[10];
+            }
+            
+            if (i < 23)
+            {
+                effect.sprite = mistfinerEffectSprites[9];
+            }
+            
+            if (i < 20)
+            {
+                effect.sprite = mistfinerEffectSprites[8];
+            }
+            
+            if (i < 18)
+            {
+                effect.sprite = mistfinerEffectSprites[7];
+            }
+            
+            if (i < 16)
+            {
+                effect.sprite = mistfinerEffectSprites[6];
+            }
+            
+            if (i < 13)
+            {
+                effect.sprite = mistfinerEffectSprites[5];
+            }
+            
+            if (i < 10)
+            {
+                effect.sprite = mistfinerEffectSprites[4];
+            }
+            
+            if (i < 8)
+            {
+                effect.sprite = mistfinerEffectSprites[3];
+            }
+            
+            if (i < 6)
+            {
+                effect.sprite = mistfinerEffectSprites[2];
+            }
+            
+            if (i < 4)
+            {
+                effect.sprite = mistfinerEffectSprites[1];
+            }
+
+            if (i < 1)
+            {
+                effect.sprite = mistfinerEffectSprites[0];
+            }
+
+            yield return null;
+        }
+
+        effect.sprite = clearImage;
     }
 
     IEnumerator JustGuardEffectController()
