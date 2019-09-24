@@ -3244,7 +3244,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 6184e12271f264555ac28f9b4a813e00,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: 6184e12271f264555ac28f9b4a813e00,
         type: 3}
@@ -7918,7 +7918,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 6184e12271f264555ac28f9b4a813e00,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: 6184e12271f264555ac28f9b4a813e00,
         type: 3}
@@ -9177,7 +9177,7 @@ MonoBehaviour:
     type: 3}
   downCannonPrefab: {fileID: 3218536918561581067, guid: b3cede3bd2fba4e5b97738d8f85780fb,
     type: 3}
-  hp: 3
+  hp: 1
   SkillInterval: 5
   battleDistance: 10
   rainRate: 0.3
@@ -9540,7 +9540,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 6184e12271f264555ac28f9b4a813e00,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: 6184e12271f264555ac28f9b4a813e00,
         type: 3}
