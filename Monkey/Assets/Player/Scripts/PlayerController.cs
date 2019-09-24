@@ -429,10 +429,22 @@ public class PlayerController : MonoBehaviour
     
     IEnumerator PlayerDead()
     {
+        var bullets = GameObject.FindGameObjectsWithTag("Bullet");
+        var rifles = GameObject.FindGameObjectsWithTag("RifleBullet");
         freezing = true;
         
         animator.ResetTrigger(deadHash);
         animator.SetTrigger(deadHash);
+
+        foreach (var bullet in bullets)
+        {
+            Destroy(bullet);
+        }
+
+        foreach (var rifle in rifles)
+        {
+            Destroy(rifle);
+        }
         
         for (int i = 0; i < 60; i++)
         {
