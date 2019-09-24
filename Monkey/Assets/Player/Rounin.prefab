@@ -1450,6 +1450,36 @@ Transform:
   m_Father: {fileID: 934534902438171895}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5744789171592671609
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4683717625301964599}
+  m_Layer: 0
+  m_Name: MistfinerPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4683717625301964599
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5744789171592671609}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.56, z: 0.61}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7878217290368182237}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6168777324756628934
 GameObject:
   m_ObjectHideFlags: 0
@@ -1765,6 +1795,7 @@ Transform:
   - {fileID: 461144616737171183}
   - {fileID: 2895735584615136104}
   - {fileID: 2895735586122524827}
+  - {fileID: 4683717625301964599}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
@@ -1830,6 +1861,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effectPosition: {fileID: 2895735586122524826}
   guardEffectPosition: {fileID: 2895735584615136107}
+  mistfinerEffectPos: {fileID: 5744789171592671609}
+  assistCanvas: {fileID: 1085061175083945445, guid: fb7031b5f7a724f89aa228bb8cc13f64,
+    type: 3}
   dashEffectSprites:
   - {fileID: 21300000, guid: 20c6edd3c1de4409fb5ad6b44b7e4a77, type: 3}
   - {fileID: 21300000, guid: 6d1c5ab6ef83646a0a41e7f21aa0fbe2, type: 3}
@@ -1862,6 +1896,31 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 03c138ac59881476cafc028bd88f1e62, type: 3}
   - {fileID: 21300000, guid: 78c91b8ce6c2e4007ad124ecfcf8b1ef, type: 3}
   - {fileID: 21300000, guid: 211996d6f5a2045079aef1d1ea4823e4, type: 3}
+  mistfinerEffectSprites:
+  - {fileID: 21300000, guid: 82538d769c39b450e8033e845c62d0f6, type: 3}
+  - {fileID: 21300000, guid: e302523c38d4b4579a87592fef4d8d7a, type: 3}
+  - {fileID: 21300000, guid: c399db2f9a1ea4ccd865d9b5c65b7fce, type: 3}
+  - {fileID: 21300000, guid: 53d0b353fcb2845f088cd272dab89a4c, type: 3}
+  - {fileID: 21300000, guid: d9b1d6df88770435a8e657f0c8e1a313, type: 3}
+  - {fileID: 21300000, guid: 36dd1833729534c5e8074ed32aedcc4b, type: 3}
+  - {fileID: 21300000, guid: 5ad9a295b4e4345138ce972cc4454348, type: 3}
+  - {fileID: 21300000, guid: 5afae3debe78b42c69a253843442ed5f, type: 3}
+  - {fileID: 21300000, guid: 23f5962dd8c7c46cf93b9eb6e5912a3d, type: 3}
+  - {fileID: 21300000, guid: e4ac7d68d7e994cce9c5984cc3c85418, type: 3}
+  - {fileID: 21300000, guid: 211039438d45044828da8ccb4d210a9f, type: 3}
+  - {fileID: 21300000, guid: fa484239db33d458695087d6628a5325, type: 3}
+  - {fileID: 21300000, guid: c50f60d3a9cf24c01a5a402cfe41d3f1, type: 3}
+  - {fileID: 21300000, guid: 5e8675babf3a24839a84cfd60c5c9fa0, type: 3}
+  - {fileID: 21300000, guid: 7fdf2fb87638546eca66c5591f497d6a, type: 3}
+  - {fileID: 21300000, guid: 6e07fdce3054846a889c482de7d79756, type: 3}
+  - {fileID: 21300000, guid: 09d65d61bde334432866227d51968b88, type: 3}
+  - {fileID: 21300000, guid: 486e92c87ae974728a1c21db524f6be2, type: 3}
+  - {fileID: 21300000, guid: d9de15aed231544449c632b930049337, type: 3}
+  - {fileID: 21300000, guid: a4d81d43a0097428eb3550c0f9ea3b34, type: 3}
+  - {fileID: 21300000, guid: 74d5fbe36da69441893941965fea5891, type: 3}
+  - {fileID: 21300000, guid: 10c2a1a91885e41f189433e5e4e005f7, type: 3}
+  - {fileID: 21300000, guid: 996b46804b17b415abcf195798650ddb, type: 3}
+  - {fileID: 21300000, guid: 54e2ac7052bf440e1a2cabf5b13a762c, type: 3}
   skillImages:
   - {fileID: 21300000, guid: dee131c4e53db40d2825d126358e2ec7, type: 3}
   - {fileID: 21300000, guid: 267de789ef77c42f688632276e38c108, type: 3}
