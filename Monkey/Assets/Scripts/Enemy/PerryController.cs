@@ -130,14 +130,14 @@ public class PerryController : MonoBehaviour
                 t += 1f;
                 Invoke("CannonRain",t);
 
-                t += 3f;
+                t += 2.5f;
                 for(int i = 0; i < 3;i++){
                     t += 0.5f;
                     Invoke("ShotCannon",t);                    
                 }
                 t += 1f;
                 Invoke("CannonRain",t);
-                t += 3f;
+                t += 4f;
                 Invoke("ShotBigCannon", t);             
             }
             break;
