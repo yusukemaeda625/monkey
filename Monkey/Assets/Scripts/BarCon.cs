@@ -29,6 +29,9 @@ public class BarCon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(remainingTime <= 0){
+            GetComponent<GameSceneManager>().GameClear();
+        }
         var time = this.GetComponent<MyGameTimer>().totalTime;        
         remainingTime -= Time.deltaTime;
         scaleParam = remainingTime / limitTime;         
