@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PerryController : MonoBehaviour
 {    
+    [SerializeField] AudioSource perryCannonSE;
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] GameObject cannonPrefab;
     [SerializeField] GameObject BigCannonPrefab;
@@ -212,23 +213,27 @@ public class PerryController : MonoBehaviour
     }
 
     private void ShotBullet(){
+        perryCannonSE.Play();
         Instantiate(bulletPrefab, transform.position + shotPos, Quaternion.identity);    
         GetComponent<Animator>().SetTrigger("Shot");
         timer = 0;
     }
     private void ShotCannon(){
+        perryCannonSE.Play();
         Instantiate(cannonPrefab, transform.position + shotPos, Quaternion.identity);     
         GetComponent<Animator>().SetTrigger("Shot");
         timer = 0;
     }
 
     private void ShotBigCannon(){
+        perryCannonSE.Play();
         Instantiate(BigCannonPrefab, transform.position + shotPos, Quaternion.identity);     
         GetComponent<Animator>().SetTrigger("Shot");
         timer = 0;
     }
 
     private void ShotRainCannon(){  
+        perryCannonSE.Play();
         Instantiate(rainCannonPrefab, transform.position + shotPos, Quaternion.identity);  
         GetComponent<Animator>().SetTrigger("Shot");                                       
         timer = 0;
