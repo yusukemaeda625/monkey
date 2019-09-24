@@ -16,6 +16,12 @@ public class Econ : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Instantiate(bu, transform.position, Quaternion.identity);
+        timer += Time.deltaTime;
+        
+        if (timer > 2)
+        {
+            Instantiate(bu, transform.position, Quaternion.identity);
+            timer = 0;
+        }
     }
 }

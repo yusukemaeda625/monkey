@@ -14,12 +14,6 @@ public class Bul : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        timer += Time.deltaTime;
-        
-        if (timer > 2)
-        {        
-            transform.Translate(-0.2f, 0, 0);
-            timer = 0;
-        }
+        transform.Translate(-0.2f, 0, 0);
     }
 }
