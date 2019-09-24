@@ -8,10 +8,10 @@ public class PlayerController : MonoBehaviour
 {
     #region SkillVariables
 
-    private bool canSwallowBlade = true;
-    private bool swallowBladePlus =  true;
-    private bool swallowBladePlusPlus = true;
-    private bool canMistfiner = true;
+    private bool canSwallowBlade = false;
+    private bool swallowBladePlus =  false;
+    private bool swallowBladePlusPlus = false;
+    private bool canMistfiner = false;
     private bool mistfinerPlus = false;
     private bool mistfinerPlusPlus = false;
     private bool advancedDash = false;
@@ -88,6 +88,7 @@ public class PlayerController : MonoBehaviour
     private int deadHash = Animator.StringToHash("deadTrigger");
     private int bossHash = Animator.StringToHash("bossTrigger");
     private int mobHash = Animator.StringToHash("mobTrigger");
+    private int selfKillHash = Animator.StringToHash("selfKillTrigger");
 
     #endregion
 
@@ -108,6 +109,8 @@ public class PlayerController : MonoBehaviour
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
         perry = GameObject.FindGameObjectWithTag("Perry");
 
+        StartCoroutine(OnStartDeath());
+        
         this.OnTriggerEnterAsObservable()
             .Subscribe(x =>
             {
@@ -291,7 +294,9 @@ public class PlayerController : MonoBehaviour
 
         if (playerIsDead)
         {
+            deathCounts++;
             StartCoroutine(PlayerDead());
+            playerIsDead = false;
         }
 
         tempVec.x = Mathf.Lerp(tempPosition, targetPosition, duration);
@@ -300,9 +305,12 @@ public class PlayerController : MonoBehaviour
 
     void SkillSelector()
     {
+        GameObject obj = null;
+        Debug.Log(deathCounts);
+        
         if (!skillSelectInit)
         {
-            Instantiate(skillCanvas);
+            obj = Instantiate(skillCanvas);
             skillSelectInit = true;
         }
         var skillSprite = GameObject.FindGameObjectWithTag("SkillImage");
@@ -347,7 +355,7 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Execution"))
         {
             Time.timeScale = 1;
             inSkillSelect = false;
@@ -402,10 +410,12 @@ public class PlayerController : MonoBehaviour
     {
         freezing = true;
         deathCounts++;
+        animator.ResetTrigger(selfKillHash);
+        animator.SetTrigger(selfKillHash);
         
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 90; i++)
         {
-            if (i == 15)
+            if (i == 39)
             {
                 Time.timeScale = 0f;
                 inSkillSelect = true;
@@ -420,7 +430,6 @@ public class PlayerController : MonoBehaviour
     IEnumerator PlayerDead()
     {
         freezing = true;
-        deathCounts++;
         
         animator.ResetTrigger(deadHash);
         animator.SetTrigger(deadHash);
@@ -434,8 +443,8 @@ public class PlayerController : MonoBehaviour
 
             if (i == 31)
             {
-                Time.timeScale = 0;
                 inSkillSelect = true;
+                Time.timeScale = 0;
             }
             
             if (i > 31)
@@ -494,6 +503,12 @@ public class PlayerController : MonoBehaviour
         }
         targetPosition = transform.position.x + mistfinerVelocity;
         freezing = false;
+    }
+
+    IEnumerator OnStartDeath()
+    {
+        StartCoroutine(SelfKill());
+        yield break;
     }
 
     IEnumerator MistfinerEffect()
