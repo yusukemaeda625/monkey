@@ -11,14 +11,6 @@ using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour
 {
-    enum AnimationStates
-    {
-        Idle,
-        Dash,
-        BackStep,
-        Guard
-    }
-    
     #region SkillVariables
 
     private bool canSwallowBlade = true;
@@ -89,6 +81,7 @@ public class PlayerController : MonoBehaviour
     private int mistFinerDuration = 50;
     private bool isBoss = true;
     private int guardHash = Animator.StringToHash("isGuard");
+    private int guardStopHash = Animator.StringToHash("guardStop");
     private int dashHash = Animator.StringToHash("dashTrigger");
     private int backStepHash = Animator.StringToHash("backStep");
     private int swallowHash = Animator.StringToHash("swallowTrigger");
@@ -120,7 +113,7 @@ public class PlayerController : MonoBehaviour
                 hit = true;
                 bool dead = !isGuarding && !isJustGuard && !inMistfiner && !tsubameGaeshi;
 
-                if (dead)
+                if (dead && (x.CompareTag("Bullet") || x.CompareTag("RifleBullet")))
                 {
                     playerIsDead = true;
                 }
@@ -163,8 +156,8 @@ public class PlayerController : MonoBehaviour
                         targetPosition -= knockBackVelocity;
                     }
                     
-                    animator.ResetTrigger("guardStop");
-                    animator.SetTrigger("guardStop");
+                    animator.ResetTrigger(guardStopHash);
+                    animator.SetTrigger(guardStopHash);
                     StartCoroutine(GuardEffectController());
                     Destroy(x.gameObject);
                 }
@@ -232,7 +225,12 @@ public class PlayerController : MonoBehaviour
 
             if (Input.GetButtonDown("SelfKillL") && Input.GetButtonDown("SelfKillR"))
             {
-                // 自殺
+                StartCoroutine(SelfKill());
+            }
+
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                StartCoroutine(SelfKill());
             }
         }
 
@@ -249,7 +247,7 @@ public class PlayerController : MonoBehaviour
             SkillSelector();
         }
 
-        if (playerIsDead || Input.GetKeyDown(KeyCode.D))
+        if (playerIsDead)
         {
             StartCoroutine(PlayerDead());
         }
@@ -352,6 +350,25 @@ public class PlayerController : MonoBehaviour
         freezing = false;
     }
 
+    IEnumerator SelfKill()
+    {
+        freezing = true;
+        deathCounts++;
+        
+        for (int i = 0; i < 30; i++)
+        {
+            if (i == 15)
+            {
+                Time.timeScale = 0f;
+                inSkillSelect = true;
+            }
+
+            yield return null;
+        }
+
+        freezing = false;
+    }
+    
     IEnumerator PlayerDead()
     {
         freezing = true;
@@ -390,7 +407,7 @@ public class PlayerController : MonoBehaviour
 
         freezing = true;
         tsubameGaeshi = true;
-        var tsubameDuration = 4;
+        var tsubameDuration = 3;
         if (swallowBladePlus)
         {
             tsubameDuration = 8;
