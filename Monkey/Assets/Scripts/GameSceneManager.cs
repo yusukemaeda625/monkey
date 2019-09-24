@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class GameSceneManager : MonoBehaviour
 {    
+    [SerializeField] AudioSource bgm;
     private Dictionary<Material,Shader> dictionaryMaterialShader = new Dictionary<Material, Shader>();
     private List<Material> changedMaterials = new List<Material>();
     private Material defaultSkyBoxMaterial;
@@ -18,6 +19,8 @@ public class GameSceneManager : MonoBehaviour
     private GameObject perry;
     void Start()
     {
+        bgm.Play(); 
+        bgm.loop = true;
         var canvas = GameObject.Find("FadeCanvas");
         canvas.GetComponent<Fade>().FadeIn();             
         //defaultSkyBoxMaterial = RenderSettings.skybox;

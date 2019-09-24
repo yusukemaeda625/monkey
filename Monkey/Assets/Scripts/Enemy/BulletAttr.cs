@@ -5,6 +5,8 @@ using UnityEngine;
 public class BulletAttr : MonoBehaviour
 {
     public int durable = 1;
+    [SerializeField] AudioSource reflectSE;
+    [SerializeField] AudioSource explotionSE;
     [SerializeField] float speed = -0.2f;
     [SerializeField] float yspeed = 0f;
     // Start is called before the first frame update
@@ -12,6 +14,10 @@ public class BulletAttr : MonoBehaviour
     {
         var rigidbody = GetComponent<Rigidbody>();
         rigidbody.sleepThreshold = -1;
+    }
+
+    void OnDestroy(){        
+        AudioSource.PlayClipAtPoint( explotionSE.clip, transform.position);        
     }
 
     // Update is called once per frame
@@ -28,6 +34,7 @@ public class BulletAttr : MonoBehaviour
         GetComponent<Rigidbody>().angularVelocity =  new Vector3(0,0,0);
         speed = Mathf.Abs(speed * 2);
         yspeed = 0f;
+        reflectSE.Play();
     }
 
     void OnTriggerEnter(Collider col){

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RainCannon : MonoBehaviour
 {
-
+    [SerializeField] AudioSource  explSE;
     [SerializeField] float Pos1 = 20;
     [SerializeField] float Pos2 = 30;
     [SerializeField] float Pos3  = 40;
@@ -25,6 +25,9 @@ public class RainCannon : MonoBehaviour
         GetComponent<Rigidbody>().AddForce(force);
     }
 
+    void OnDestroy(){                    
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -32,7 +35,8 @@ public class RainCannon : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider col){
-        if(col.tag != "Perry" && col.tag != "Bullet"){
+        if(col.tag != "Perry" && col.tag != "Bullet"){     
+            AudioSource.PlayClipAtPoint( explSE.clip, transform.position);           
             Destroy(this.gameObject);
         }
     }

@@ -9,6 +9,8 @@ public class Asigarus : MonoBehaviour
         Asigaru_B,
         Asigaru_C
     }
+
+    [SerializeField] AudioSource shotSE;
     [SerializeField] AsigaruType myType;
 
     private float myTimer = 0f;
@@ -82,10 +84,13 @@ public class Asigarus : MonoBehaviour
     void ShotNormalBullet(){        
         Instantiate(bulletPrefab, transform.position + shotPos, Quaternion.identity);             
         GetComponent<Animator>().SetTrigger("Shot");
+        shotSE.Play();
     }
 
     void ShotRifleBullet(){
         Instantiate(rifleBulletPrefab, transform.position + shotPos, Quaternion.identity);     
+        GetComponent<Animator>().SetTrigger("Shot");
+        shotSE.Play();
     }
 
     public void Deth(){
