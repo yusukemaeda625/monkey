@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -111,14 +111,28 @@ public class PerryController : MonoBehaviour
             case 1 :
             {
                 //第三形態                
-                var r = Random.Range(0f,12f);
-                Debug.Log(r);
-                if(r >= 5f){
-                    cannonRashInterval = Random.Range(0.2f,0.5f);
-                    RandomCannonRash();
-                }else{
-                    CannonRain();
-                }    
+                float t = 0f;
+                for(int i = 0; i < 4;i++){
+                    Invoke("ShotCannon",t);
+                    t += 0.4f;
+                }
+                t += 1f;
+                Invoke("CannonRainHard",t);
+
+                t += 3f;
+                for(int i = 0; i < 4;i++){
+                    t += 0.4f;
+                    Invoke("ShotCannon",t);                    
+                }
+                t += 1f;
+                Invoke("CannonRainHard",t);
+
+                t += 3f;
+                for(int i = 0; i < 4;i++){
+                    t += 0.5f;
+                    Invoke("ShotBigCannon",t);                    
+                } 
+		t += 5.0f;  
             }
             break;
             case 2 :
@@ -196,6 +210,15 @@ public class PerryController : MonoBehaviour
         }
     }
     
+    void CannonRainHard(){
+        float shotRate = rainRate;        
+        float t = 0f;    
+        for(int i = 0; i < 8; i++){            
+            Invoke("ShotRainCannon",t);
+            t += shotRate;            
+        }
+    }
+
     void Kick(){                
         Debug.Log("Perrys Kick");        
         var gs = player.GetComponent<PlayerController>().GetGuardState();        
